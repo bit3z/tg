@@ -1,0 +1,52 @@
+name: Process Action Queue
+
+on:
+  workflow_dispatch:
+    inputs:
+      queue_json:
+        description: 'Base64-encoded JSON array of queued actions'
+        required: true
+        type: string
+
+permissions:
+  contents: write
+
+jobs:
+  process:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: pip install telethon cryptography
+
+      - name: Restore session file
+        env:
+          SESSION_B64: ${{ secrets.TG_SESSION_B64 }}
+        run: echo "$SESSION_B64" | base64 -d > session.session
+
+      - name: Process queue
+        env:
+          TG_API_ID:   ${{ secrets.TG_API_ID }}
+          TG_API_HASH: ${{ secrets.TG_API_HASH }}
+          DATA_KEY:    ${{ secrets.DATA_ENCRYPTION_KEY }}
+          QUEUE_B64:   ${{ github.event.inputs.queue_json }}
+        run: python src/process_queue.py
+
+      - name: Commit results
+        run: |
+          git config user.name  "tg-relay[bot]"
+          git config user.email "tg-relay[bot]@users.noreply.github.com"
+          git add data/
+          git diff --cached --quiet || git commit -m "chore: queue processed [$(date -u '+%Y-%m-%dT%H:%M:%SZ')]"
+          git push
