@@ -5,14 +5,10 @@
     "username": "VxL_Re"
   },
   "initialized": true,
-  "last_sync": "2026-06-13T20:44:59.188650+00:00",
+  "last_sync": "2026-06-13T21:43:07.789874+00:00",
   "sync_log": [
     {
-      "chat": "\u0627\u06cc\u0646\u062a\u0631\u0646\u062a \u0622\u0632\u0627\u062f",
-      "fetched": 50
-    },
-    {
-      "chat": "Odin Club",
+      "chat": "VPN MARKET",
       "fetched": 50
     },
     {
@@ -20,11 +16,15 @@
       "fetched": 50
     },
     {
+      "chat": "Odin Club",
+      "fetched": 50
+    },
+    {
       "chat": "X_BaT",
       "fetched": 50
     },
     {
-      "chat": "VPN MARKET",
+      "chat": "\u0627\u06cc\u0646\u062a\u0631\u0646\u062a \u0622\u0632\u0627\u062f",
       "fetched": 50
     },
     {
