@@ -1,8 +1,6 @@
 name: Fetch Telegram Messages
 
 on:
-  schedule:
-    - cron: '*/15 * * * *'   # every 15 minutes
   workflow_dispatch:
     inputs:
       force_full_fetch:
@@ -34,11 +32,8 @@ jobs:
         run: |
           pip install telethon cryptography python-dotenv
 
-      - name: Restore session file from secret
-        env:
-          SESSION_B64: ${{ secrets.TG_SESSION_B64 }}
-        run: |
-          echo "$SESSION_B64" | base64 -d > session.session
+      - name: Set session string env
+        run: echo "TG_SESSION_STRING=${{ secrets.TG_SESSION_STRING }}" >> $GITHUB_ENV
 
       - name: Run fetch script
         env:
