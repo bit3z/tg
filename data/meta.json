@@ -5,47 +5,39 @@
     "username": "VxL_Re"
   },
   "initialized": true,
-  "last_sync": "2026-06-13T11:35:06.770211+00:00",
+  "last_sync": "2026-06-13T13:12:40.592219+00:00",
   "sync_log": [
     {
-      "chat": "VPN MARKET",
-      "fetched": 20
-    },
-    {
-      "chat": "Backup",
-      "fetched": 20
-    },
-    {
       "chat": "X_BaT",
-      "fetched": 20
-    },
-    {
-      "chat": "Telegram",
-      "fetched": 20
-    },
-    {
-      "chat": "\ud835\udc04\ud835\udc2b\ud835\udc2b\ud835\udc28\ud835\udc2b \ud835\udfd2\ud835\udfce\ud835\udfd2\u2122",
-      "fetched": 20
+      "fetched": 50
     },
     {
       "chat": "Odin Club",
-      "fetched": 20
+      "fetched": 50
+    },
+    {
+      "chat": "VPN MARKET",
+      "fetched": 50
+    },
+    {
+      "chat": "\ud835\udc04\ud835\udc2b\ud835\udc2b\ud835\udc28\ud835\udc2b \ud835\udfd2\ud835\udfce\ud835\udfd2\u2122",
+      "fetched": 50
     },
     {
       "chat": "\u0627\u06cc\u0646\u062a\u0631\u0646\u062a \u0622\u0632\u0627\u062f",
-      "fetched": 20
+      "fetched": 50
     },
     {
       "chat": "\ud835\udde1\ud835\uddf2\ud835\ude05\ud835\udde3\ud835\uddf2\ud835\uddff\ud835\ude00 | BACKUP",
-      "fetched": 20
+      "fetched": 50
     },
     {
       "chat": "FREENET \u0645\u062c\u0644\u0647",
-      "fetched": 20
+      "fetched": 50
     },
     {
       "chat": "LeecherPro Notices",
-      "fetched": 20
+      "fetched": 22
     },
     {
       "chat": "\u0641\u06cc\u0644\u062a\u0631\u0634\u06a9\u0646 \uff34\uff53\uff36\uff50\uff4e | \u0646\u06cc\u0645 \u0628\u0647\u0627 | \u0646\u0627\u0645\u062d\u062f\u0648\u062f",
@@ -57,59 +49,7 @@
     },
     {
       "chat": "Royal Ping | \u0631\u0648\u06cc\u0627\u0644 \u067e\u06cc\u0646\u06af",
-      "fetched": 20
-    },
-    {
-      "chat": "TeleFeed: Auto Forward Bot",
-      "fetched": 20
-    },
-    {
-      "chat": "BotFather",
-      "fetched": 20
-    },
-    {
-      "chat": "#",
-      "fetched": 20
-    },
-    {
-      "chat": "Leecher Pro",
-      "fetched": 20
-    },
-    {
-      "chat": "IranGuardVPN",
-      "fetched": 8
-    },
-    {
-      "chat": "Digest_xbot",
-      "fetched": 1
-    },
-    {
-      "chat": "Mist",
-      "fetched": 1
-    },
-    {
-      "chat": "M\u00e6hd!",
-      "fetched": 5
-    },
-    {
-      "chat": "X",
-      "fetched": 1
-    },
-    {
-      "chat": "User Info \u2022 Get ID \u2022 idbot",
-      "fetched": 6
-    },
-    {
-      "chat": "8749114750",
-      "fetched": 2
-    },
-    {
-      "chat": "Bifrost",
-      "fetched": 6
-    },
-    {
-      "chat": "File to Link",
-      "fetched": 8
+      "fetched": 50
     }
   ],
   "total_chats": 26
