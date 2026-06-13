@@ -34,12 +34,12 @@ jobs:
 
       - name: Set session string env
         run: echo "TG_SESSION_STRING=${{ secrets.TG_SESSION_STRING }}" >> $GITHUB_ENV
-
       - name: Run fetch script
         env:
           TG_API_ID:     ${{ secrets.TG_API_ID }}
           TG_API_HASH:   ${{ secrets.TG_API_HASH }}
           DATA_KEY:      ${{ secrets.DATA_ENCRYPTION_KEY }}
+          TG_SESSION_STRING: ${{ secrets.TG_SESSION_STRING }}
           FORCE_FULL:    ${{ github.event.inputs.force_full_fetch || 'false' }}
           DEFAULT_FETCH_COUNT: '20'
           DEFAULT_UPDATE_COUNT: '50'
