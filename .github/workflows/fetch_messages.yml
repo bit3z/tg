@@ -2,7 +2,7 @@ name: Fetch Telegram Messages
 
 on:
   schedule:
-    - cron: '*/15 * * * *'   # every 15 minutes
+    - cron: '*/15 * * * *'
   workflow_dispatch:
     inputs:
       force_full_fetch:
@@ -31,17 +31,20 @@ jobs:
           python-version: '3.11'
 
       - name: Install dependencies
-        run: |
-          pip install pyrogram tgcrypto cryptography
+        run: pip install pyrogram tgcrypto cryptography
 
       - name: Run fetch script
         env:
-          TG_API_ID:         ${{ secrets.TG_API_ID }}
-          TG_API_HASH:       ${{ secrets.TG_API_HASH }}
-          TG_SESSION_STRING: ${{ secrets.TG_SESSION_STRING }}
-          DATA_KEY:          ${{ secrets.DATA_ENCRYPTION_KEY }}
-          FORCE_FULL:        ${{ github.event.inputs.force_full_fetch || 'false' }}
-          DEFAULT_FETCH_COUNT: '20'
+          TG_API_ID:            ${{ secrets.TG_API_ID }}
+          TG_API_HASH:          ${{ secrets.TG_API_HASH }}
+          TG_SESSION_STRING:    ${{ secrets.TG_SESSION_STRING }}
+          DATA_KEY:             ${{ secrets.DATA_ENCRYPTION_KEY }}
+          GH_DISPATCH_TOKEN:    ${{ secrets.GH_DISPATCH_TOKEN }}
+          MASTER_PASSWORD_HASH: ${{ secrets.MASTER_PASSWORD_HASH }}
+          GH_OWNER:             ${{ secrets.GH_OWNER }}
+          GH_REPO:              ${{ secrets.GH_REPO }}
+          FORCE_FULL:           ${{ github.event.inputs.force_full_fetch || 'false' }}
+          DEFAULT_FETCH_COUNT:  '20'
           DEFAULT_UPDATE_COUNT: '50'
         run: python src/fetch_messages.py
 

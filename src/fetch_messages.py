@@ -1,7 +1,5 @@
 """
-fetch_messages.py — Pyrogram rewrite
-Runs inside GitHub Actions to pull messages from Telegram
-and write encrypted + plain JSON to data/.
+fetch_messages.py — Pyrogram, writes data/chats.json + data/config.enc
 """
 
 import os
@@ -26,11 +24,17 @@ FORCE          = os.environ.get("FORCE_FULL", "false").lower() == "true"
 INIT_N         = int(os.environ.get("DEFAULT_FETCH_COUNT",  "20"))
 UPD_N          = int(os.environ.get("DEFAULT_UPDATE_COUNT", "50"))
 
-DATA_DIR    = Path("data")
+GH_DISPATCH_TOKEN    = os.environ["GH_DISPATCH_TOKEN"]
+MASTER_PASSWORD_HASH = os.environ["MASTER_PASSWORD_HASH"]
+GH_OWNER             = os.environ["GH_OWNER"]
+GH_REPO              = os.environ["GH_REPO"]
+
+DATA_DIR   = Path("data")
 DATA_DIR.mkdir(exist_ok=True)
-META_FILE   = DATA_DIR / "meta.json"
-CHATS_ENC   = DATA_DIR / "chats.enc"
-CHATS_JSON  = DATA_DIR / "chats.json"
+META_FILE  = DATA_DIR / "meta.json"
+CHATS_ENC  = DATA_DIR / "chats.enc"
+CHATS_JSON = DATA_DIR / "chats.json"
+CONFIG_ENC = DATA_DIR / "config.enc"
 
 # ── encryption ────────────────────────────────────────────────────────────────
 def _fernet(passphrase: str) -> Fernet:
@@ -50,69 +54,45 @@ def decrypt(data: bytes):
 # ── helpers ───────────────────────────────────────────────────────────────────
 def _chat_kind(chat_type: ChatType) -> str:
     return {
-        ChatType.PRIVATE:   "user",
-        ChatType.BOT:       "user",
-        ChatType.GROUP:     "group",
-        ChatType.SUPERGROUP:"group",
-        ChatType.CHANNEL:   "channel",
+        ChatType.PRIVATE:    "user",
+        ChatType.BOT:        "user",
+        ChatType.GROUP:      "group",
+        ChatType.SUPERGROUP: "group",
+        ChatType.CHANNEL:    "channel",
     }.get(chat_type, "unknown")
 
 def _media_info(msg) -> dict | None:
     if msg.media is None:
         return None
     mt = msg.media
-
     if mt == MessageMediaType.PHOTO:
         return {"type": "photo", "id": msg.id}
-
     if mt == MessageMediaType.DOCUMENT and msg.document:
         doc = msg.document
-        return {
-            "type":      "document",
-            "id":        doc.file_id,
-            "filename":  doc.file_name,
-            "mime_type": doc.mime_type,
-            "size":      doc.file_size,
-        }
+        return {"type": "document", "id": doc.file_id,
+                "filename": doc.file_name, "mime_type": doc.mime_type, "size": doc.file_size}
     if mt == MessageMediaType.VIDEO and msg.video:
         v = msg.video
-        return {
-            "type":      "document",
-            "id":        v.file_id,
-            "filename":  v.file_name or "video.mp4",
-            "mime_type": v.mime_type,
-            "size":      v.file_size,
-        }
+        return {"type": "document", "id": v.file_id,
+                "filename": v.file_name or "video.mp4", "mime_type": v.mime_type, "size": v.file_size}
     if mt == MessageMediaType.AUDIO and msg.audio:
         a = msg.audio
-        return {
-            "type":      "document",
-            "id":        a.file_id,
-            "filename":  a.file_name or "audio",
-            "mime_type": a.mime_type,
-            "size":      a.file_size,
-        }
+        return {"type": "document", "id": a.file_id,
+                "filename": a.file_name or "audio", "mime_type": a.mime_type, "size": a.file_size}
     if mt == MessageMediaType.VOICE and msg.voice:
         return {"type": "document", "id": msg.voice.file_id,
-                "filename": "voice.ogg", "mime_type": "audio/ogg",
-                "size": msg.voice.file_size}
+                "filename": "voice.ogg", "mime_type": "audio/ogg", "size": msg.voice.file_size}
     if mt == MessageMediaType.STICKER and msg.sticker:
-        return {"type": "sticker", "emoji": msg.sticker.emoji,
-                "id": msg.sticker.file_id}
+        return {"type": "sticker", "emoji": msg.sticker.emoji, "id": msg.sticker.file_id}
     if mt == MessageMediaType.WEB_PAGE and msg.web_page:
         wp = msg.web_page
-        return {"type": "webpage", "url": wp.url, "title": wp.title,
-                "description": wp.description}
-
+        return {"type": "webpage", "url": wp.url, "title": wp.title, "description": wp.description}
     return {"type": mt.name.lower() if mt else "unknown"}
 
 def _reactions(msg) -> list:
-    out = []
     if not msg.reactions:
-        return out
-    for r in msg.reactions.reactions:
-        out.append({"emoji": r.emoji, "count": r.count})
-    return out
+        return []
+    return [{"emoji": r.emoji, "count": r.count} for r in msg.reactions.reactions]
 
 def _serialize_message(msg, chat_id: int) -> dict:
     from_id = None
@@ -120,7 +100,6 @@ def _serialize_message(msg, chat_id: int) -> dict:
         from_id = msg.from_user.id
     elif msg.sender_chat:
         from_id = msg.sender_chat.id
-
     return {
         "id":        msg.id,
         "chat_id":   chat_id,
@@ -156,12 +135,9 @@ async def main():
 
     async with app:
         me = await app.get_me()
-        meta["me"] = {
-            "id":       me.id,
-            "name":     f"{me.first_name or ''} {me.last_name or ''}".strip(),
-            "username": me.username,
-        }
-        print(f"✓ Connected as {meta['me']['name']}")
+        my_name = f"{me.first_name or ''} {me.last_name or ''}".strip()
+        meta["me"] = {"id": me.id, "name": my_name, "username": me.username}
+        print(f"✓ Connected as {my_name}")
 
         chats_data: dict[str, dict] = {}
         if CHATS_ENC.exists() and not first_run:
@@ -175,7 +151,6 @@ async def main():
             key     = str(chat_id)
             unread  = dialog.unread_messages_count or 0
 
-            # on incremental runs skip chats with no unread
             if not first_run and unread == 0:
                 continue
 
@@ -211,23 +186,30 @@ async def main():
                 "last_message_date": messages[0]["date"] if messages else None,
                 "messages":          list(existing.values()),
             }
-
             action_log.append({"chat": name, "fetched": len(messages)})
             print(f"  ↳ {name}: {len(messages)} messages")
 
-        # write encrypted blob
+        # write encrypted blob + plain JSON for Pages
         CHATS_ENC.write_bytes(encrypt(chats_data))
-        # write plain JSON for GitHub Pages
         CHATS_JSON.write_text(
             json.dumps(chats_data, ensure_ascii=False, default=str, indent=2)
         )
+
+        # write encrypted config for browser unlock
+        config_payload = {
+            "gh_token":     GH_DISPATCH_TOKEN,
+            "password_hash": MASTER_PASSWORD_HASH,
+            "gh_owner":     GH_OWNER,
+            "gh_repo":      GH_REPO,
+        }
+        CONFIG_ENC.write_bytes(encrypt(config_payload))
+        print("✓ config.enc written")
 
         meta["initialized"] = True
         meta["last_sync"]   = datetime.now(timezone.utc).isoformat()
         meta["sync_log"]    = action_log
         meta["total_chats"] = len(chats_data)
         META_FILE.write_text(json.dumps(meta, indent=2, default=str))
-
         print(f"✓ Done — {len(chats_data)} chats written")
 
 asyncio.run(main())
