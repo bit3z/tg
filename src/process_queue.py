@@ -12,6 +12,7 @@ import time
 from pathlib import Path
 from datetime import datetime, timezone
 
+from telethon.sessions import StringSession
 from telethon import TelegramClient
 from telethon.tl.functions.messages import SendReactionRequest
 from telethon.tl.types import ReactionEmoji
@@ -104,7 +105,8 @@ async def main():
     queue: list[dict] = json.loads(queue_json)
     print(f"Processing {len(queue)} queued actions …")
 
-    client = TelegramClient("session", API_ID, API_HASH)
+    SESSION_STRING = os.environ["TG_SESSION_STRING"]
+    client = TelegramClient(StringSession(SESSION_STRING), API_ID, API_HASH)
     await client.start()
 
     results = []

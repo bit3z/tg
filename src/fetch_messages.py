@@ -12,6 +12,7 @@ import time
 from pathlib import Path
 from datetime import datetime, timezone
 
+from telethon.sessions import StringSession
 from telethon import TelegramClient
 from telethon.tl.types import (
     User, Chat, Channel,
@@ -120,7 +121,8 @@ async def main():
     first_run = FORCE or not meta.get("initialized", False)
     fetch_n   = INIT_N if first_run else UPD_N
 
-    client = TelegramClient("session", API_ID, API_HASH)
+    SESSION_STRING = os.environ["TG_SESSION_STRING"]
+    client = TelegramClient(StringSession(SESSION_STRING), API_ID, API_HASH)
     await client.start()
     print(f"✓ Connected. first_run={first_run}, fetch_n={fetch_n}")
 
