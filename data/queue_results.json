@@ -1,103 +1,21 @@
 {
-  "processed_at": "2026-06-13T17:41:21.058481+00:00",
-  "total": 10,
-  "ok": 10,
-  "errors": 0,
+  "processed_at": "2026-06-13T17:47:44.524613+00:00",
+  "total": 2,
+  "ok": 1,
+  "errors": 1,
   "results": [
     {
       "index": 0,
       "type": "react",
-      "status": "ok",
-      "result": {
-        "ok": true
-      }
+      "status": "error",
+      "error": "Telegram says: [400 REACTION_INVALID] - Invalid reaction provided (only valid emoji are allowed) (caused by \"messages.SendReaction\")"
     },
     {
       "index": 1,
-      "type": "download_request",
-      "status": "ok",
-      "result": {
-        "ok": true,
-        "queued": true,
-        "note": "Download flagged. Add external storage to enable real downloads."
-      }
-    },
-    {
-      "index": 2,
-      "type": "download_request",
-      "status": "ok",
-      "result": {
-        "ok": true,
-        "queued": true,
-        "note": "Download flagged. Add external storage to enable real downloads."
-      }
-    },
-    {
-      "index": 3,
-      "type": "download_request",
-      "status": "ok",
-      "result": {
-        "ok": true,
-        "queued": true,
-        "note": "Download flagged. Add external storage to enable real downloads."
-      }
-    },
-    {
-      "index": 4,
-      "type": "download_request",
-      "status": "ok",
-      "result": {
-        "ok": true,
-        "queued": true,
-        "note": "Download flagged. Add external storage to enable real downloads."
-      }
-    },
-    {
-      "index": 5,
-      "type": "download_request",
-      "status": "ok",
-      "result": {
-        "ok": true,
-        "queued": true,
-        "note": "Download flagged. Add external storage to enable real downloads."
-      }
-    },
-    {
-      "index": 6,
       "type": "react",
       "status": "ok",
       "result": {
         "ok": true
-      }
-    },
-    {
-      "index": 7,
-      "type": "download_request",
-      "status": "ok",
-      "result": {
-        "ok": true,
-        "queued": true,
-        "note": "Download flagged. Add external storage to enable real downloads."
-      }
-    },
-    {
-      "index": 8,
-      "type": "download_request",
-      "status": "ok",
-      "result": {
-        "ok": true,
-        "queued": true,
-        "note": "Download flagged. Add external storage to enable real downloads."
-      }
-    },
-    {
-      "index": 9,
-      "type": "download_request",
-      "status": "ok",
-      "result": {
-        "ok": true,
-        "queued": true,
-        "note": "Download flagged. Add external storage to enable real downloads."
       }
     }
   ]
