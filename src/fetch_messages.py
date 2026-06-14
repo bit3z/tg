@@ -1,7 +1,5 @@
 """
-fetch_messages.py — Pyrogram, Option B dual-key encryption
-- chats.enc  encrypted with DATA_ENCRYPTION_KEY (strong key)
-- config.enc encrypted with UI_ENCRYPTION_KEY   (== login password)
+fetch_messages.py — with bio, bot flag, inline keyboards, dual-key encryption
 """
 
 import os
@@ -17,12 +15,11 @@ from pyrogram.enums import ChatType, MessageMediaType
 from pyrogram.errors import FloodWait
 from cryptography.fernet import Fernet
 
-# ── config ────────────────────────────────────────────────────────────────────
 API_ID         = int(os.environ["TG_API_ID"])
 API_HASH       = os.environ["TG_API_HASH"]
 SESSION_STRING = os.environ["TG_SESSION_STRING"].strip()
-RAW_KEY        = os.environ["DATA_KEY"]           # strong key for chats.enc
-UI_KEY         = os.environ["UI_ENCRYPTION_KEY"]  # == login password for config.enc
+RAW_KEY        = os.environ["DATA_KEY"]
+UI_KEY         = os.environ["UI_ENCRYPTION_KEY"]
 FORCE          = os.environ.get("FORCE_FULL", "false").lower() == "true"
 INIT_N         = int(os.environ.get("DEFAULT_FETCH_COUNT",  "20"))
 UPD_N          = int(os.environ.get("DEFAULT_UPDATE_COUNT", "50"))
@@ -39,15 +36,11 @@ CHATS_ENC  = DATA_DIR / "chats.enc"
 CHATS_JSON = DATA_DIR / "chats.json"
 CONFIG_ENC = DATA_DIR / "config.enc"
 
-# ── encryption ────────────────────────────────────────────────────────────────
-def _fernet(passphrase: str) -> Fernet:
-    key = base64.urlsafe_b64encode(
-        hashlib.sha256(passphrase.encode()).digest()
-    )
-    return Fernet(key)
+def _fernet(p: str) -> Fernet:
+    return Fernet(base64.urlsafe_b64encode(hashlib.sha256(p.encode()).digest()))
 
-F    = _fernet(RAW_KEY)   # for chats
-F_ui = _fernet(UI_KEY)   # for config.enc (browser decrypts with login password)
+F    = _fernet(RAW_KEY)
+F_ui = _fernet(UI_KEY)
 
 def encrypt(obj, f: Fernet = None) -> bytes:
     return (f or F).encrypt(json.dumps(obj, ensure_ascii=False, default=str).encode())
@@ -55,11 +48,10 @@ def encrypt(obj, f: Fernet = None) -> bytes:
 def decrypt(data: bytes, f: Fernet = None):
     return json.loads((f or F).decrypt(data))
 
-# ── helpers ───────────────────────────────────────────────────────────────────
 def _chat_kind(chat_type: ChatType) -> str:
     return {
         ChatType.PRIVATE:    "user",
-        ChatType.BOT:        "user",
+        ChatType.BOT:        "bot",
         ChatType.GROUP:      "group",
         ChatType.SUPERGROUP: "group",
         ChatType.CHANNEL:    "channel",
@@ -87,19 +79,54 @@ def _media_info(msg) -> dict | None:
         return {"type": "document", "id": msg.voice.file_id,
                 "filename": "voice.ogg", "mime_type": "audio/ogg", "size": msg.voice.file_size}
     if mt == MessageMediaType.STICKER and msg.sticker:
-        return {"type": "sticker", "emoji": msg.sticker.emoji, "id": msg.sticker.file_id}
-    if mt == MessageMediaType.WEB_PAGE and msg.web_page:
-        wp = msg.web_page
-        return {"type": "webpage", "url": wp.url, "title": wp.title, "description": wp.description}
+        return {"type": "sticker", "emoji": msg.sticker.emoji,
+                "id": msg.sticker.file_id, "is_animated": msg.sticker.is_animated,
+                "mime_type": "image/webp", "size": msg.sticker.file_size}
+    if mt == MessageMediaType.ANIMATION and msg.animation:
+        return {"type": "document", "id": msg.animation.file_id,
+                "filename": msg.animation.file_name or "animation.gif",
+                "mime_type": msg.animation.mime_type, "size": msg.animation.file_size}
     if mt == MessageMediaType.VIDEO_NOTE and msg.video_note:
         return {"type": "document", "id": msg.video_note.file_id,
-                "filename": "video_note.mp4", "mime_type": "video/mp4", "size": msg.video_note.file_size}
+                "filename": "video_note.mp4", "mime_type": "video/mp4",
+                "size": msg.video_note.file_size}
+    if mt == MessageMediaType.WEB_PAGE and msg.web_page:
+        wp = msg.web_page
+        return {"type": "webpage", "url": wp.url, "title": wp.title,
+                "description": wp.description}
+    if mt == MessageMediaType.POLL and msg.poll:
+        return {"type": "poll", "question": msg.poll.question,
+                "options": [o.text for o in msg.poll.options]}
+    if mt == MessageMediaType.CONTACT and msg.contact:
+        return {"type": "contact", "name": f"{msg.contact.first_name or ''} {msg.contact.last_name or ''}".strip(),
+                "phone": msg.contact.phone_number}
+    if mt == MessageMediaType.LOCATION and msg.location:
+        return {"type": "location", "lat": msg.location.latitude, "lng": msg.location.longitude}
     return {"type": mt.name.lower() if mt else "unknown"}
 
 def _reactions(msg) -> list:
     if not msg.reactions:
         return []
     return [{"emoji": r.emoji, "count": r.count} for r in msg.reactions.reactions]
+
+def _inline_keyboard(msg) -> list | None:
+    """Extract inline keyboard buttons from a bot message."""
+    if not msg.reply_markup:
+        return None
+    try:
+        rows = []
+        for row in msg.reply_markup.inline_keyboard:
+            buttons = []
+            for btn in row:
+                buttons.append({
+                    "text":          btn.text,
+                    "callback_data": getattr(btn, "callback_data", None),
+                    "url":           getattr(btn, "url", None),
+                })
+            rows.append(buttons)
+        return rows
+    except Exception:
+        return None
 
 def _serialize_message(msg, chat_id: int) -> dict:
     from_id = None
@@ -108,21 +135,38 @@ def _serialize_message(msg, chat_id: int) -> dict:
     elif msg.sender_chat:
         from_id = msg.sender_chat.id
     return {
-        "id":        msg.id,
-        "chat_id":   chat_id,
-        "date":      msg.date.isoformat() if msg.date else None,
-        "from_id":   from_id,
-        "text":      msg.text or msg.caption or "",
-        "media":     _media_info(msg),
-        "reactions": _reactions(msg),
-        "reply_to":  msg.reply_to_message_id,
-        "pinned":    getattr(msg, "pinned", False),
-        "out":       getattr(msg, "outgoing", False),
-        "views":     getattr(msg, "views", None),
-        "forwards":  getattr(msg, "forwards", None),
+        "id":              msg.id,
+        "chat_id":         chat_id,
+        "date":            msg.date.isoformat() if msg.date else None,
+        "from_id":         from_id,
+        "text":            msg.text or msg.caption or "",
+        "media":           _media_info(msg),
+        "reactions":       _reactions(msg),
+        "reply_to":        msg.reply_to_message_id,
+        "pinned":          getattr(msg, "pinned", False),
+        "out":             getattr(msg, "outgoing", False),
+        "views":           getattr(msg, "views", None),
+        "forwards":        getattr(msg, "forwards", None),
+        "inline_keyboard": _inline_keyboard(msg),
+        "via_bot":         msg.via_bot.id if msg.via_bot else None,
     }
 
-# ── main ──────────────────────────────────────────────────────────────────────
+async def _fetch_chat_info(app: Client, chat_id: int) -> dict:
+    """Fetch extended info: bio, last_seen, is_bot, etc."""
+    try:
+        full = await app.get_chat(chat_id)
+        info = {
+            "bio":         getattr(full, "bio", None) or getattr(full, "description", None),
+            "members_count": getattr(full, "members_count", None),
+            "is_verified": getattr(full, "is_verified", False),
+            "is_scam":     getattr(full, "is_scam", False),
+            "is_fake":     getattr(full, "is_fake", False),
+            "dc_id":       getattr(full, "dc_id", None),
+        }
+        return info
+    except Exception:
+        return {}
+
 async def main():
     meta = {}
     if META_FILE.exists():
@@ -167,6 +211,7 @@ async def main():
                 or str(chat_id)
             )
             kind = _chat_kind(chat.type)
+            is_bot = chat.type == ChatType.BOT
 
             messages = []
             try:
@@ -180,6 +225,12 @@ async def main():
                 print(f"  Error fetching {name}: {e}")
                 continue
 
+            # fetch extended info on first run or if missing
+            extra = {}
+            if first_run or key not in chats_data or "bio" not in chats_data.get(key, {}):
+                extra = await _fetch_chat_info(app, chat_id)
+                await asyncio.sleep(0.2)
+
             existing = {m["id"]: m for m in chats_data.get(key, {}).get("messages", [])}
             for m in messages:
                 existing[m["id"]] = m
@@ -188,21 +239,23 @@ async def main():
                 "id":                chat_id,
                 "name":              name,
                 "kind":              kind,
+                "is_bot":            is_bot,
                 "username":          getattr(chat, "username", None),
                 "unread_count":      unread,
                 "last_message_date": messages[0]["date"] if messages else None,
                 "messages":          list(existing.values()),
+                # extended info
+                "bio":               extra.get("bio") or chats_data.get(key, {}).get("bio"),
+                "members_count":     extra.get("members_count") or chats_data.get(key, {}).get("members_count"),
+                "is_verified":       extra.get("is_verified", False),
+                "is_scam":           extra.get("is_scam", False),
             }
             action_log.append({"chat": name, "fetched": len(messages)})
             print(f"  ↳ {name}: {len(messages)} messages")
 
-        # write encrypted blob + plain JSON for Pages
         CHATS_ENC.write_bytes(encrypt(chats_data, F))
-        CHATS_JSON.write_text(
-            json.dumps(chats_data, ensure_ascii=False, default=str, indent=2)
-        )
+        CHATS_JSON.write_text(json.dumps(chats_data, ensure_ascii=False, default=str, indent=2))
 
-        # write config.enc encrypted with UI key (login password)
         config_payload = {
             "gh_token":      GH_DISPATCH_TOKEN,
             "password_hash": MASTER_PASSWORD_HASH,
@@ -210,7 +263,7 @@ async def main():
             "gh_repo":       GH_REPO,
         }
         CONFIG_ENC.write_bytes(encrypt(config_payload, F_ui))
-        print("✓ config.enc written (UI key)")
+        print("✓ config.enc written")
 
         meta["initialized"] = True
         meta["last_sync"]   = datetime.now(timezone.utc).isoformat()
