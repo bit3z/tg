@@ -5,14 +5,14 @@
     "username": "VxL_Re"
   },
   "initialized": true,
-  "last_sync": "2026-06-14T10:36:03.546784+00:00",
+  "last_sync": "2026-06-14T12:28:13.090711+00:00",
   "sync_log": [
     {
-      "chat": "\u0627\u06cc\u0646\u062a\u0631\u0646\u062a \u0622\u0632\u0627\u062f",
+      "chat": "Odin Club",
       "fetched": 50
     },
     {
-      "chat": "Odin Club",
+      "chat": "\u0627\u06cc\u0646\u062a\u0631\u0646\u062a \u0622\u0632\u0627\u062f",
       "fetched": 50
     },
     {
@@ -21,10 +21,6 @@
     },
     {
       "chat": "FREENET \u0645\u062c\u0644\u0647",
-      "fetched": 50
-    },
-    {
-      "chat": "\ud835\udde1\ud835\uddf2\ud835\ude05\ud835\udde3\ud835\uddf2\ud835\uddff\ud835\ude00 | BACKUP",
       "fetched": 50
     },
     {
