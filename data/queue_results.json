@@ -1,44 +1,113 @@
 {
-  "processed_at": "2026-06-14T10:43:13.554492+00:00",
-  "total": 10,
-  "ok": 4,
-  "errors": 6,
+  "processed_at": "2026-06-14T10:51:46.450336+00:00",
+  "total": 13,
+  "ok": 10,
+  "errors": 3,
   "results": [
     {
       "index": 0,
-      "type": "send_message",
-      "status": "ok",
-      "result": {
-        "ok": true,
-        "msg_id": 55545
-      }
+      "type": "download_request",
+      "status": "error",
+      "error": "name 'buf' is not defined"
     },
     {
       "index": 1,
       "type": "download_request",
-      "status": "error",
-      "error": "expected str, bytes or os.PathLike object, not BytesIO"
+      "status": "ok",
+      "result": {
+        "ok": true,
+        "safe_name": "-1002258272508_17263.npvt",
+        "filename": "\u067e\u062e\u062a \u067e\u0632 \u062c\u062f\u06cc\u062f \ud83c\udde9\ud83c\uddea\ud83d\ude80.npvt",
+        "size": 7996,
+        "enc_path": "data/files/-1002258272508_17263.npvt.enc"
+      }
     },
     {
       "index": 2,
       "type": "download_request",
-      "status": "error",
-      "error": "expected str, bytes or os.PathLike object, not BytesIO"
+      "status": "ok",
+      "result": {
+        "ok": true,
+        "safe_name": "-1002258575230_30584",
+        "filename": "file_-1002258575230_30584",
+        "size": 35794,
+        "enc_path": "data/files/-1002258575230_30584.enc"
+      }
     },
     {
       "index": 3,
       "type": "download_request",
-      "status": "error",
-      "error": "expected str, bytes or os.PathLike object, not BytesIO"
+      "status": "ok",
+      "result": {
+        "ok": true,
+        "safe_name": "-1002258575230_30585",
+        "filename": "file_-1002258575230_30585",
+        "size": 72638,
+        "enc_path": "data/files/-1002258575230_30585.enc"
+      }
     },
     {
       "index": 4,
       "type": "download_request",
       "status": "error",
-      "error": "expected str, bytes or os.PathLike object, not BytesIO"
+      "error": "name 'buf' is not defined"
     },
     {
       "index": 5,
+      "type": "download_request",
+      "status": "error",
+      "error": "name 'buf' is not defined"
+    },
+    {
+      "index": 6,
+      "type": "download_request",
+      "status": "ok",
+      "result": {
+        "ok": true,
+        "safe_name": "177590614_55374",
+        "filename": "file_177590614_55374",
+        "size": 74956,
+        "enc_path": "data/files/177590614_55374.enc"
+      }
+    },
+    {
+      "index": 7,
+      "type": "download_request",
+      "status": "ok",
+      "result": {
+        "ok": true,
+        "safe_name": "177590614_55373.mp3",
+        "filename": "Reza-Bahram-Yar-128.mp3",
+        "size": 3463651,
+        "enc_path": "data/files/177590614_55373.mp3.enc"
+      }
+    },
+    {
+      "index": 8,
+      "type": "download_request",
+      "status": "ok",
+      "result": {
+        "ok": true,
+        "safe_name": "177590614_55372.MP4",
+        "filename": "IMG_8592.MP4",
+        "size": 2001479,
+        "enc_path": "data/files/177590614_55372.MP4.enc"
+      }
+    },
+    {
+      "index": 9,
+      "type": "download_request",
+      "status": "ok",
+      "result": {
+        "ok": true,
+        "safe_name": "-1001237997838_23370.webp",
+        "filename": "Logopit_1780682465073.webp",
+        "size": 91010,
+        "enc_path": "data/files/-1001237997838_23370.webp.enc"
+      }
+    },
+    {
+      "index": 10,
       "type": "download_request",
       "status": "ok",
       "result": {
@@ -47,7 +116,7 @@
       }
     },
     {
-      "index": 6,
+      "index": 11,
       "type": "react",
       "status": "ok",
       "result": {
@@ -55,26 +124,13 @@
       }
     },
     {
-      "index": 7,
-      "type": "download_request",
-      "status": "error",
-      "error": "expected str, bytes or os.PathLike object, not BytesIO"
-    },
-    {
-      "index": 8,
-      "type": "download_request",
+      "index": 12,
+      "type": "send_message",
       "status": "ok",
       "result": {
         "ok": true,
-        "downloaded": 0,
-        "files": []
+        "msg_id": 55546
       }
-    },
-    {
-      "index": 9,
-      "type": "download_request",
-      "status": "error",
-      "error": "expected str, bytes or os.PathLike object, not BytesIO"
     }
   ]
 }
