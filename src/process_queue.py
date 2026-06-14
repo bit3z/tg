@@ -3,7 +3,6 @@ process_queue.py — full rewrite with real file downloading to data/files/
 """
 
 import os
-import io
 import json
 import asyncio
 import base64
@@ -65,11 +64,11 @@ async def resolve_peer(app: Client, chat_id):
 
 # ── file download helper ──────────────────────────────────────────────────────
 async def download_and_store(app: Client, msg, label: str) -> dict:
-    """Download a message's media into memory, encrypt it, save to data/files/."""
+    """Download a message's media to a temp file, encrypt it, save to data/files/."""
+    import tempfile, os
     if msg.media is None:
         return {"ok": False, "error": "No media in message"}
 
-    # check size before downloading
     media_obj = (
         msg.document or msg.photo or msg.video or msg.audio
         or msg.voice or msg.sticker or msg.video_note or msg.animation
@@ -82,7 +81,6 @@ async def download_and_store(app: Client, msg, label: str) -> dict:
                 "error": f"File too large ({size/1048576:.1f} MB > {MAX_FILE_SIZE//1048576} MB limit)",
             }
 
-    # determine filename
     filename = (
         getattr(media_obj, "file_name", None)
         or f"file_{msg.chat.id}_{msg.id}"
@@ -93,15 +91,16 @@ async def download_and_store(app: Client, msg, label: str) -> dict:
     safe_name = f"{msg.chat.id}_{msg.id}{ext}"
     enc_path  = FILES_DIR / f"{safe_name}.enc"
 
-    # stream into memory buffer
-    buf = io.BytesIO()
-    await app.download_media(msg, file_name=buf)
-    raw = buf.getvalue()
+    # download to a real temp file, then read bytes
+    with tempfile.TemporaryDirectory() as tmp:
+        tmp_path = os.path.join(tmp, safe_name)
+        downloaded = await app.download_media(msg, file_name=tmp_path)
+        if not downloaded:
+            return {"ok": False, "error": "download_media returned None"}
+        raw = Path(downloaded).read_bytes()
 
-    # encrypt and write
     enc_path.write_bytes(encrypt_bytes(raw))
 
-    # update index
     index = load_files_index()
     index[safe_name] = {
         "chat_id":   msg.chat.id,
@@ -163,9 +162,12 @@ async def handle_download_request(app: Client, action: dict) -> dict:
         label    = f"profile_{chat_id}"
         safe_name = f"profile_{chat_id}.jpg.enc"
         enc_path  = FILES_DIR / safe_name
-        buf = io.BytesIO()
-        await app.download_media(chat.photo.big_file_id, file_name=buf)
-        enc_path.write_bytes(encrypt_bytes(buf.getvalue()))
+        import tempfile, os as _os
+        with tempfile.TemporaryDirectory() as tmp:
+            tmp_path = _os.path.join(tmp, f"profile_{chat_id}.jpg")
+            downloaded = await app.download_media(chat.photo.big_file_id, file_name=tmp_path)
+            raw_bytes = Path(downloaded).read_bytes() if downloaded else b""
+        enc_path.write_bytes(encrypt_bytes(raw_bytes))
         index = load_files_index()
         index[label] = {
             "chat_id": chat_id, "msg_id": None, "filename": f"profile_{chat_id}.jpg",
@@ -181,11 +183,14 @@ async def handle_download_request(app: Client, action: dict) -> dict:
         # download all profile photos for a user
         results = []
         async for photo in app.get_chat_photos(chat_id):
-            buf = io.BytesIO()
-            await app.download_media(photo.file_id, file_name=buf)
+            import tempfile, os as _os2
             safe_name = f"profile_{chat_id}_{photo.file_id[-8:]}.jpg.enc"
             enc_path  = FILES_DIR / safe_name
-            enc_path.write_bytes(encrypt_bytes(buf.getvalue()))
+            with tempfile.TemporaryDirectory() as tmp:
+                tmp_path = _os2.path.join(tmp, f"p_{photo.file_id[-8:]}.jpg")
+                downloaded = await app.download_media(photo.file_id, file_name=tmp_path)
+                raw_bytes = Path(downloaded).read_bytes() if downloaded else b""
+            enc_path.write_bytes(encrypt_bytes(raw_bytes))
             index = load_files_index()
             index[safe_name] = {
                 "chat_id": chat_id, "msg_id": None,
