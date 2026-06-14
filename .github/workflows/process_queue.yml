@@ -14,7 +14,7 @@ permissions:
 jobs:
   process:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 15
 
     steps:
       - name: Checkout repo
@@ -39,7 +39,7 @@ jobs:
           QUEUE_B64:         ${{ github.event.inputs.queue_json }}
         run: python src/process_queue.py
 
-      - name: Commit results
+      - name: Commit results and downloaded files
         run: |
           git config user.name  "tg-relay[bot]"
           git config user.email "tg-relay[bot]@users.noreply.github.com"
