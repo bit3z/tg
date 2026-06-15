@@ -1,8 +1,8 @@
 {
-  "processed_at": "2026-06-15T12:11:56.258965+00:00",
-  "total": 6,
-  "ok": 4,
-  "errors": 2,
+  "processed_at": "2026-06-15T12:26:38.678355+00:00",
+  "total": 2,
+  "ok": 2,
+  "errors": 0,
   "results": [
     {
       "index": 0,
@@ -10,10 +10,10 @@
       "status": "ok",
       "result": {
         "ok": true,
-        "safe_name": "177590614_55374",
-        "filename": "file_177590614_55374",
-        "size": 74956,
-        "enc_path": "data/files/177590614_55374.enc"
+        "safe_name": "-1001237997838_23376.webp",
+        "filename": "Logopit_1746827977067.webp",
+        "size": 40037,
+        "enc_path": "data/files/-1001237997838_23376.webp.enc"
       }
     },
     {
@@ -22,47 +22,11 @@
       "status": "ok",
       "result": {
         "ok": true,
-        "safe_name": "177590614_55373.mp3",
-        "filename": "Reza-Bahram-Yar-128.mp3",
-        "size": 3463651,
-        "enc_path": "data/files/177590614_55373.mp3.enc"
+        "safe_name": "-1001237997838_23374.webp",
+        "filename": "Logopit_1781477043176.webp",
+        "size": 216146,
+        "enc_path": "data/files/-1001237997838_23374.webp.enc"
       }
-    },
-    {
-      "index": 2,
-      "type": "download_request",
-      "status": "ok",
-      "result": {
-        "ok": true,
-        "safe_name": "177590614_55372.MP4",
-        "filename": "IMG_8592.MP4",
-        "size": 2001479,
-        "enc_path": "data/files/177590614_55372.MP4.enc"
-      }
-    },
-    {
-      "index": 3,
-      "type": "download_request",
-      "status": "ok",
-      "result": {
-        "ok": true,
-        "safe_name": "177590614_55371",
-        "filename": "file_177590614_55371",
-        "size": 116045,
-        "enc_path": "data/files/177590614_55371.enc"
-      }
-    },
-    {
-      "index": 4,
-      "type": "download_request",
-      "status": "error",
-      "error": "name 'buf' is not defined"
-    },
-    {
-      "index": 5,
-      "type": "download_request",
-      "status": "error",
-      "error": "name 'buf' is not defined"
     }
   ]
 }

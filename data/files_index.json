@@ -42,5 +42,27 @@
     "mime_type": null,
     "label": "file",
     "downloaded_at": "2026-06-15T12:11:51.072756+00:00"
+  },
+  "-1001237997838_23376.webp": {
+    "chat_id": -1001237997838,
+    "msg_id": 23376,
+    "filename": "Logopit_1746827977067.webp",
+    "safe_name": "-1001237997838_23376.webp",
+    "enc_path": "data/files/-1001237997838_23376.webp.enc",
+    "size": 40037,
+    "mime_type": "image/webp",
+    "label": "file",
+    "downloaded_at": "2026-06-15T12:26:35.546370+00:00"
+  },
+  "-1001237997838_23374.webp": {
+    "chat_id": -1001237997838,
+    "msg_id": 23374,
+    "filename": "Logopit_1781477043176.webp",
+    "safe_name": "-1001237997838_23374.webp",
+    "enc_path": "data/files/-1001237997838_23374.webp.enc",
+    "size": 216146,
+    "mime_type": "image/webp",
+    "label": "file",
+    "downloaded_at": "2026-06-15T12:26:38.075700+00:00"
   }
 }
