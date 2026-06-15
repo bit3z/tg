@@ -5,10 +5,14 @@
     "username": "VxL_Re"
   },
   "initialized": true,
-  "last_sync": "2026-06-15T16:24:26.564555+00:00",
+  "last_sync": "2026-06-15T20:00:08.512984+00:00",
   "sync_log": [
     {
-      "chat": "\ud835\udc04\ud835\udc2b\ud835\udc2b\ud835\udc28\ud835\udc2b \ud835\udfd2\ud835\udfce\ud835\udfd2\u2122",
+      "chat": "X_BaT",
+      "fetched": 50
+    },
+    {
+      "chat": "\u0627\u06cc\u0646\u062a\u0631\u0646\u062a \u0622\u0632\u0627\u062f",
       "fetched": 50
     },
     {
@@ -16,11 +20,7 @@
       "fetched": 50
     },
     {
-      "chat": "X_BaT",
-      "fetched": 50
-    },
-    {
-      "chat": "\u0627\u06cc\u0646\u062a\u0631\u0646\u062a \u0622\u0632\u0627\u062f",
+      "chat": "\ud835\udc04\ud835\udc2b\ud835\udc2b\ud835\udc28\ud835\udc2b \ud835\udfd2\ud835\udfce\ud835\udfd2\u2122",
       "fetched": 50
     },
     {
