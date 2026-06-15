@@ -258,12 +258,26 @@ async def handle_edit_message(app: Client, action: dict) -> dict:
 
 async def handle_bot_callback(app: Client, action: dict) -> dict:
     """Press an inline keyboard button on a bot message."""
-    chat_id     = action["chat_id"]
-    msg_id      = action["msg_id"]
+    chat_id       = action["chat_id"]
+    msg_id        = action["msg_id"]
     callback_data = action["callback_data"]
     await resolve_peer(app, chat_id)
     await app.request_callback_answer(chat_id, msg_id, callback_data)
     return {"ok": True}
+
+async def handle_join_chat(app: Client, action: dict) -> dict:
+    """Join a public/private channel or group by username, invite link, or ID."""
+    target = action.get("target", "")
+    # invite link
+    if "joinchat" in str(target) or "+t.me" in str(target) or target.startswith("https://t.me/+"):
+        result = await app.join_chat(target)
+    elif str(target).lstrip("-").isdigit():
+        result = await app.join_chat(int(target))
+    else:
+        # username or t.me link
+        username = target.replace("https://t.me/","").replace("@","").strip()
+        result = await app.join_chat(username)
+    return {"ok": True, "chat_id": result.id, "title": result.title or result.first_name}
 
 HANDLERS = {
     "send_message":     handle_send_message,
@@ -276,6 +290,7 @@ HANDLERS = {
     "delete_message":   handle_delete_message,
     "edit_message":     handle_edit_message,
     "bot_callback":     handle_bot_callback,
+    "join_chat":        handle_join_chat,
 }
 
 # ── main ──────────────────────────────────────────────────────────────────────

@@ -495,12 +495,13 @@ a:hover { text-decoration:underline; }
 /* ══════════════════════════════════════════════
    FAB — QUEUE + TRACKER
 ══════════════════════════════════════════════ */
-#fab-wrap { position:fixed; bottom:20px; right:20px; z-index:200; display:flex; flex-direction:column; align-items:flex-end; gap:8px; }
+#fab-wrap { position:fixed; top:52px; right:0; z-index:200; }
 
 #fab-panel {
-  width:360px; max-height:500px; background:var(--bg1);
-  border:1px solid var(--border2); border-radius:var(--r3);
-  box-shadow:var(--e3); display:none; flex-direction:column; overflow:hidden;
+  width:380px; max-height:540px; background:var(--bg1);
+  border:1px solid var(--border2); border-bottom:1px solid var(--border2);
+  border-radius:0 0 var(--r3) var(--r3); box-shadow:var(--e3);
+  display:none; flex-direction:column; overflow:hidden;
 }
 #fab-panel.on { display:flex; }
 
@@ -568,22 +569,7 @@ a:hover { text-decoration:underline; }
 }
 .clr-btn:hover { background:var(--bg4); }
 
-#fab {
-  width:48px; height:48px; border-radius:var(--r2);
-  background:var(--bg1); border:1px solid var(--border2);
-  cursor:pointer; display:flex; align-items:center; justify-content:center;
-  color:var(--text); box-shadow:var(--e2); transition:all .15s; position:relative;
-}
-#fab:hover { background:var(--bg2); border-color:var(--accent); }
-#fab .sym { font-size:20px; }
-#fab-badge {
-  position:absolute; top:-6px; right:-6px;
-  min-width:18px; height:18px; padding:0 4px;
-  background:var(--accent); color:#fff; border-radius:9px;
-  font-size:10px; font-weight:700; display:none;
-  align-items:center; justify-content:center;
-  border:2px solid var(--bg);
-}
+/* fab merged into topbar */
 
 /* ══════════════════════════════════════════════
    MEDIA LIGHTBOX
@@ -692,6 +678,42 @@ a:hover { text-decoration:underline; }
 .fi-btn .sym { font-size:13px; }
 
 /* ══════════════════════════════════════════════
+   CONTEXT MENU
+══════════════════════════════════════════════ */
+#ctx-menu {
+  position:fixed; z-index:800; background:var(--bg2);
+  border:1px solid var(--border2); border-radius:var(--r2);
+  box-shadow:var(--e3); min-width:190px; overflow:hidden; display:none;
+}
+#ctx-menu.on { display:block; }
+.ctx-rxns { display:flex; gap:1px; padding:8px 10px; border-bottom:1px solid var(--border); background:var(--bg3); flex-wrap:wrap; }
+.ctx-rxn { font-size:18px; padding:3px 5px; border:none; background:none; cursor:pointer; border-radius:var(--r); transition:transform .1s; }
+.ctx-rxn:hover { transform:scale(1.35); background:var(--accent-bg); }
+.ctx-item { display:flex; align-items:center; gap:10px; padding:9px 14px; font-size:13px; color:var(--text); cursor:pointer; transition:background .1s; border:none; background:none; font-family:inherit; width:100%; text-align:left; }
+.ctx-item:hover { background:var(--bg3); }
+.ctx-item .sym { font-size:15px; color:var(--text3); }
+.ctx-item.danger { color:var(--red); }
+.ctx-item.danger .sym { color:var(--red); }
+.ctx-sep { height:1px; background:var(--border); }
+.msg-menu-btn { position:absolute; top:5px; right:5px; width:22px; height:22px; border-radius:50%; background:var(--bg3); border:1px solid var(--border); cursor:pointer; display:flex; align-items:center; justify-content:center; opacity:0; transition:opacity .12s; z-index:5; }
+.bubble:hover .msg-menu-btn { opacity:1; }
+.msg-menu-btn .sym { font-size:13px; color:var(--text2); }
+
+/* JOIN MODAL */
+#join-modal { position:fixed; inset:0; z-index:600; background:rgba(0,0,0,.7); display:none; align-items:center; justify-content:center; }
+#join-modal.on { display:flex; }
+.join-card { width:min(400px,92vw); background:var(--bg1); border:1px solid var(--border2); border-radius:var(--r3); box-shadow:var(--e3); padding:24px; display:flex; flex-direction:column; gap:14px; }
+.join-title { font-size:15px; font-weight:600; }
+.join-sub { font-size:12px; color:var(--text3); margin-top:-8px; }
+.join-input { width:100%; padding:9px 14px; background:var(--bg2); border:1px solid var(--border2); border-radius:var(--r); color:var(--text); font-family:inherit; font-size:13px; outline:none; transition:border-color .15s; }
+.join-input:focus { border-color:var(--accent); }
+.join-row { display:flex; gap:8px; justify-content:flex-end; }
+.jbtn { padding:8px 16px; border-radius:var(--r); font-family:inherit; font-size:13px; font-weight:500; cursor:pointer; border:none; }
+.jbtn.pri { background:var(--accent); color:#fff; }
+.jbtn.pri:hover { opacity:.85; }
+.jbtn.sec { background:var(--bg3); color:var(--text2); border:1px solid var(--border2); }
+
+/* ══════════════════════════════════════════════
    SNACK
 ══════════════════════════════════════════════ */
 #snack {
@@ -761,6 +783,8 @@ a:hover { text-decoration:underline; }
     </div>
     <div class="topbar-space"></div>
     <button class="tb-btn" onclick="triggerFetch()" title="Sync now"><span class="sym tb-btn-icon" id="sync-ico">sync</span></button>
+    <button class="tb-btn" id="fab-topbtn" onclick="toggleFab()" title="Queue &amp; Tracker" style="position:relative"><span class="sym" id="fab-ico">pending_actions</span><div id="fab-badge" style="position:absolute;top:4px;right:4px;min-width:14px;height:14px;padding:0 3px;background:var(--accent);color:#fff;border-radius:7px;font-size:9px;font-weight:700;display:none;align-items:center;justify-content:center"></div></button>
+    <button class="tb-btn" onclick="openJoin()" title="Join chat"><span class="sym">group_add</span></button>
     <button class="tb-btn" onclick="showFiles()" title="Downloaded files"><span class="sym">folder_open</span></button>
     <button class="tb-btn" onclick="toggleNav()" title="Toggle nav"><span class="sym">menu</span></button>
   </div>
@@ -844,10 +868,7 @@ a:hover { text-decoration:underline; }
     <div class="fab-body" id="fab-body"></div>
     <div class="fab-foot" id="fab-foot"></div>
   </div>
-  <button id="fab" onclick="toggleFab()">
-    <span class="sym" id="fab-ico">pending_actions</span>
-    <div id="fab-badge"></div>
-  </button>
+
 </div>
 
 <!-- LIGHTBOX -->
@@ -870,6 +891,32 @@ a:hover { text-decoration:underline; }
 </div>
 
 <div id="snack"></div>
+
+<!-- CONTEXT MENU -->
+<div id="ctx-menu">
+  <div class="ctx-rxns" id="ctx-rxns"></div>
+  <button class="ctx-item" onclick="ctxReactMore()"><span class="sym">add_reaction</span>More reactions…</button>
+  <div class="ctx-sep"></div>
+  <button class="ctx-item" onclick="ctxCopy()"><span class="sym">content_copy</span>Copy text</button>
+  <button class="ctx-item" onclick="ctxReply()"><span class="sym">reply</span>Reply</button>
+  <button class="ctx-item" onclick="ctxForward()"><span class="sym">forward</span>Forward</button>
+  <button class="ctx-item" onclick="ctxPin()"><span class="sym">push_pin</span>Pin</button>
+  <div class="ctx-sep"></div>
+  <button class="ctx-item danger" onclick="ctxDelete()"><span class="sym">delete</span>Delete</button>
+</div>
+
+<!-- JOIN MODAL -->
+<div id="join-modal" onclick="if(event.target===this)closeJoin()">
+  <div class="join-card">
+    <div class="join-title">Join a chat</div>
+    <div class="join-sub">Enter a @username, invite link (t.me/+…), or numeric chat ID</div>
+    <input class="join-input" id="join-inp" placeholder="@username or https://t.me/+abc123…" onkeydown="if(event.key==='Enter')submitJoin()"/>
+    <div class="join-row">
+      <button class="jbtn sec" onclick="closeJoin()">Cancel</button>
+      <button class="jbtn pri" onclick="submitJoin()">Join</button>
+    </div>
+  </div>
+</div>
 
 <script>
 /* ════════════════════════════════════
@@ -1090,9 +1137,10 @@ function msgHTML(m,myId,c){
   return `<div class="mrow ${out?"out":""}" data-mid="${m.id}">
     ${showSender?`<div class="mini-av">${String(m.from_id||"?").slice(-2)}</div>`:""}
     <div class="bubble" ondblclick="setReply(${m.id},'${esc(m.text||"Media").slice(0,40).replace(/'/g,"\\'")}')">
+      <button class="msg-menu-btn" onclick="event.stopPropagation();openCtx(event,${c.id},${m.id},`${(m.text||"").replace(/`/g,String.fromCharCode(96))}`)"><span class="sym">more_vert</span></button>
       <div class="rbar">${qr}</div>
       ${showSender?`<div class="msg-sender">user_${m.from_id||"?"}</div>`:""}
-      ${m.reply_to?`<div class="reply-prev" onclick="scrollToMsg(${m.reply_to})">↩ #${m.reply_to}</div>`:""}
+      ${m.m.reply_preview?`<div class="reply-prev" onclick="scrollToMsg(${m.reply_to})"><span style="color:var(--accent);font-size:10px;display:block;margin-bottom:1px">${m.reply_preview.from_id?"user_"+m.reply_preview.from_id:"↩"}</span>${esc((m.reply_preview.text||"").slice(0,80))||"📎 Media"}</div>`:m.reply_to?`<div class="reply-prev" onclick="scrollToMsg(${m.reply_to})">↩ Message #${m.reply_to}</div>`:""}
       ${m.text?`<div class="msg-text">${esc(m.text)}</div>`:""}
       ${mediaPartHTML(m,c.id,lbIdx)}
       ${m.inline_keyboard?ikbHTML(m,c.id):""}
@@ -1127,42 +1175,50 @@ function mediaPartHTML(m, chatId, lbKey){
   if(md.type==="webpage") return `<div class="media-card"><span class="symf media-icon">link</span><div class="media-body"><div class="media-name">${esc(md.title||md.url||"Link")}</div><div class="media-meta">${esc(md.description||md.url||"")}</div></div>${md.url?`<a href="${esc(md.url)}" target="_blank" rel="noopener" class="mbtn"><span class="sym">open_in_new</span></a>`:""}</div>`;
   if(md.type==="sticker") return `<div class="sticker-wrap" onclick="${lbKey?`openLb('${lbKey}')`:""}">${md.emoji?`<div style="font-size:48px;margin:4px 0">${md.emoji}</div>`:`<div class="sticker-label">Sticker</div>`}${md.id?`<div class="media-card" style="margin-top:4px"><span class="symf media-icon">emoji_emotions</span><div class="media-body"><div class="media-name">Sticker${md.emoji?" "+md.emoji:""}</div><div class="media-meta">${md.is_animated?"Animated · ":""}${md.size?fmtSize(md.size):""}</div></div><label class="dl-check"><input type="checkbox" onchange="toggleDl(this,${chatId},${m.id})"/> Queue DL</label></div>`:""}</div>`;
 
-  // photo
+  // photo — TG photos are always jpeg
   if(md.type==="photo"){
     const encPath=findEncFile(chatId,m.id);
     if(encPath){
-      return `<div class="photo-thumb" onclick="openLb('${lbKey||""}')">
-        <img src="placeholder" data-enc="${encPath}" onload="this.style.display='block'" style="max-width:260px;border-radius:var(--r2);display:block" onerror="this.style.display='none'"/>
-        <div class="photo-overlay"><span class="symf" style="color:#fff;font-size:32px">zoom_in</span></div>
+      return `<div style="margin-top:6px">
+        <div class="photo-thumb" onclick="openLb('${lbKey||""}','image/jpeg')">
+          <div class="photo-thumb-inner"><span class="symf photo-placeholder">image</span></div>
+          <div class="photo-overlay"><span class="symf play-icon">zoom_in</span></div>
+        </div>
+        <button class="mbtn" style="margin-top:4px" onclick="downloadEncFull('${encPath}','photo_${m.id}.jpg','image/jpeg')"><span class="sym">download</span>Save</button>
       </div>`;
     }
-    return `<div class="photo-thumb" onclick="${lbKey?`openLb('${lbKey}')`:""}" style="cursor:${lbKey?"pointer":"default"}">
+    return `<div class="photo-thumb" onclick="toggleDl(null,${chatId},${m.id},true)" style="cursor:pointer">
       <div class="photo-thumb-inner"><span class="symf photo-placeholder">image</span></div>
-      <div class="photo-overlay"><span class="symf play-icon">zoom_in</span></div>
-    </div>
-    <div class="media-card" style="margin-top:4px"><span class="symf media-icon">image</span><div class="media-body"><div class="media-name">Photo</div><div class="media-meta">Queue to download</div></div><label class="dl-check"><input type="checkbox" onchange="toggleDl(this,${chatId},${m.id})"/> Queue DL</label></div>`;
+      <div class="photo-overlay"><span class="sym" style="color:#fff;font-size:18px">download</span><span style="color:#fff;font-size:11px;margin-left:4px">Queue DL</span></div>
+    </div>`;
   }
 
   // document / video / audio / voice
-  const icon=mimeIcon(md.mime_type);
-  const name=md.filename||"File";
-  const meta=[md.mime_type,md.size?fmtSize(md.size):""].filter(Boolean).join(" · ");
+  // guess filename + ext when TG sends no filename (common for photos/voice/video)
+  const rawMime=md.mime_type||"application/octet-stream";
+  const extMap={"image/jpeg":".jpg","image/png":".png","image/webp":".webp","image/gif":".gif",
+    "video/mp4":".mp4","video/quicktime":".mov","audio/mpeg":".mp3",
+    "audio/ogg":".ogg","audio/opus":".ogg","application/ogg":".ogg"};
+  const guessedExt=!md.filename?(extMap[rawMime]||""):"";
+  const rawName=md.filename||(("file_"+m.id)+guessedExt);
+  const icon=mimeIcon(rawMime);
+  const meta=[rawMime,md.size?fmtSize(md.size):""].filter(Boolean).join(" · ");
   const encPath=findEncFile(chatId,m.id);
-  const isAudio=md.mime_type&&(md.mime_type.startsWith("audio")||md.mime_type==="application/ogg");
-  const isVideo=md.mime_type&&md.mime_type.startsWith("video");
-  const isImage=md.mime_type&&md.mime_type.startsWith("image");
+  const isAudio=rawMime.startsWith("audio")||rawMime==="application/ogg";
+  const isVideo=rawMime.startsWith("video");
+  const isImage=rawMime.startsWith("image");
 
   let actions="";
   if(encPath){
-    if(isAudio)      actions+=`<button class="mbtn primary" onclick="playAudioEnc('${encPath}','${esc(name)}','${md.mime_type||"audio/ogg"}')"><span class="sym">play_circle</span>Play</button>`;
-    else if(isVideo) actions+=`<button class="mbtn primary" onclick="openLb('${lbKey||""}')"><span class="sym">play_circle</span>Play</button>`;
-    else if(isImage) actions+=`<button class="mbtn primary" onclick="openLb('${lbKey||""}')"><span class="sym">zoom_in</span>View</button>`;
-    actions+=`<button class="mbtn" onclick="downloadEnc('${encPath}','${esc(name)}')"><span class="sym">download</span>Save</button>`;
+    if(isAudio)      actions+=`<button class="mbtn primary" onclick="playAudioEnc('${encPath}','${esc(rawName)}','${rawMime}')"><span class="sym">play_circle</span>Play</button>`;
+    else if(isVideo) actions+=`<button class="mbtn primary" onclick="openLb('${lbKey||""}','${rawMime}')"><span class="sym">play_circle</span>Play</button>`;
+    else if(isImage) actions+=`<button class="mbtn primary" onclick="openLb('${lbKey||""}','${rawMime}')"><span class="sym">zoom_in</span>View</button>`;
+    actions+=`<button class="mbtn" onclick="downloadEncFull('${encPath}','${esc(rawName)}','${rawMime}')"><span class="sym">download</span>Save</button>`;
   }else{
     actions+=`<label class="dl-check"><input type="checkbox" onchange="toggleDl(this,${chatId},${m.id})"/> Queue DL</label>`;
   }
 
-  return `<div class="media-card"><span class="symf media-icon">${icon}</span><div class="media-body"><div class="media-name">${esc(name)}</div><div class="media-meta">${esc(meta)}</div></div><div class="media-actions">${actions}</div></div>`;
+  return `<div class="media-card"><span class="symf media-icon">${icon}</span><div class="media-body"><div class="media-name">${esc(rawName)}</div><div class="media-meta">${esc(meta)}</div></div><div class="media-actions">${actions}</div></div>`;
 }
 
 function findEncFile(chatId, msgId){
@@ -1214,7 +1270,7 @@ async function playAudioEnc(encPath, name, mimeType){
 /* ════════════════════════════════════
    LIGHTBOX
 ════════════════════════════════════ */
-async function openLb(key){
+async function openLb(key,forceMime){
   if(!key||!lbRegistry[key]) return;
   const item=lbRegistry[key];
   const enc=findEncFile(item.chatId,item.msgId);
@@ -1232,7 +1288,7 @@ async function openLb(key){
 
   try{
     const md=item.media;
-    const mime=md.mime_type||(md.type==="photo"?"image/jpeg":"application/octet-stream");
+    const mime=forceMime||md.mime_type||(md.type==="photo"?"image/jpeg":md.type==="sticker"?"image/webp":"application/octet-stream");
     const url=await decryptToObjectURL(enc,mime);
     S._lbUrl=url;
 
@@ -1262,6 +1318,10 @@ function closeLb(){
 function toggleDlFromLb(chatId,msgId){
   addQ({type:"download_request",chat_id:chatId,msg_id:msgId,kind:"file"});
 }
+function toggleDl(el,chatId,msgId,forceAdd){
+  if(forceAdd||el?.checked) addQ({type:"download_request",chat_id:chatId,msg_id:msgId,kind:"file"});
+  else{S.queue=S.queue.filter(a=>!(a.type==="download_request"&&a.chat_id===chatId&&a.msg_id===msgId));renderFab();}
+}
 
 /* ════════════════════════════════════
    DECRYPT HELPERS
@@ -1277,6 +1337,14 @@ async function decryptToObjectURL(encPath, mimeType){
   return URL.createObjectURL(blob);
 }
 
+async function downloadEncFull(encPath,filename,mime){
+  snack("Decrypting…");
+  try{
+    const url=await decryptToObjectURL(encPath,mime||guessMime(filename));
+    const a=document.createElement("a");a.href=url;a.download=filename;a.click();
+    setTimeout(()=>URL.revokeObjectURL(url),5000);snack("✓ Download started");
+  }catch(e){snack("✗ "+e.message);}
+}
 async function downloadEnc(encPath, filename){
   snack("Decrypting…");
   try{
@@ -1366,9 +1434,12 @@ function renderFab(){
       : `<div class="fab-empty"><span class="symf" style="font-size:32px;display:block;margin-bottom:8px;opacity:.3">pending_actions</span>Queue is empty</div>`;
     foot.innerHTML=`<button class="disp-btn" onclick="dispatch()" ${cnt?"":"disabled"}><span class="sym">send</span>Dispatch ${cnt?cnt+" action"+(cnt>1?"s":""):""}</button>${cnt?`<button class="clr-btn" onclick="S.queue=[];renderFab()">Clear</button>`:""}`;
   }else{
-    body.innerHTML=S.tracker.length
+    const hasOk=S.tracker.some(t=>t.type==="DISPATCH"&&t.status==="ok");
+    const trackerHTML=S.tracker.length
       ? S.tracker.map(t=>`<div class="ti"><div class="ti-top"><div class="tdot ${t.status}"></div><span class="ti-tag">${esc(t.type)}</span><span class="ti-label">${esc(t.label)}</span><span class="ti-ts">${fmtTime(t.ts)}</span></div>${t.detail?`<div class="ti-detail">${esc(t.detail)}</div>`:""}</div>`).join("")
       : `<div class="fab-empty"><span class="symf" style="font-size:32px;display:block;margin-bottom:8px;opacity:.3">timeline</span>No actions yet</div>`;
+    const reloadBanner=hasOk?`<div style="margin-top:8px;padding:10px 12px;background:var(--accent-bg);border:1px solid var(--accent-border);border-radius:var(--r);font-size:12px;color:var(--accent);display:flex;align-items:center;gap:8px"><span class="symf" style="font-size:16px">check_circle</span><span style="flex:1">Actions processed.</span><button onclick="loadData().then(()=>{renderChats();if(S.activeId)openChat(S.activeId);snack('✓ Updated');})" style="background:var(--accent);color:#fff;border:none;border-radius:var(--r);padding:4px 10px;font-family:inherit;font-size:11px;font-weight:600;cursor:pointer">Reload data</button></div>`:"";
+    body.innerHTML=trackerHTML+reloadBanner;
     foot.innerHTML=S.tracker.length?`<button class="clr-btn" style="width:100%" onclick="S.tracker=[];renderFab()">Clear log</button>`:"";
   }
 }
@@ -1384,8 +1455,9 @@ function addQ(action){
 }
 function rmQ(i){S.queue=S.queue.filter(a=>a._id!==i);renderFab();}
 function track(type,label,status,detail=""){
+  if(type==="QUEUE") return;
   S.tracker.unshift({type,label,status,detail,ts:new Date().toISOString()});
-  if(S.tracker.length>80) S.tracker.length=80;
+  if(S.tracker.length>40) S.tracker.length=40;
   if(S.fabOpen&&S.fabTab==="tracker") renderFab();
 }
 function qDesc(a){
@@ -1560,7 +1632,48 @@ function fmtSize(b){if(!b)return"";if(b<1024)return b+"B";if(b<1048576)return(b/
 function mediaLabel(m){if(!m)return"";return m.type==="photo"?"Photo":m.type==="sticker"?`Sticker${m.emoji?" "+m.emoji:""}`:m.type==="document"?(m.filename||"File"):m.type==="webpage"?(m.title||"Link"):m.type==="poll"?"Poll":m.type==="location"?"Location":m.type==="contact"?"Contact":m.type;}
 function mimeIcon(mime){if(!mime)return"description";if(mime.startsWith("image"))return"image";if(mime.startsWith("video"))return"movie";if(mime.startsWith("audio")||mime==="application/ogg")return"audio_file";if(mime.includes("pdf"))return"picture_as_pdf";if(mime.includes("zip")||mime.includes("archive"))return"folder_zip";if(mime.includes("text"))return"text_snippet";return"description";}
 
-document.addEventListener("keydown",e=>{if(e.key==="Escape"){closeLb();closeFiles();}});
+document.addEventListener("keydown",e=>{if(e.key==="Escape"){closeLb();closeFiles();closeCtx();closeJoin();}});
+document.addEventListener("click",e=>{if(!e.target.closest("#ctx-menu")&&!e.target.closest(".msg-menu-btn"))closeCtx();});
+
+/* CONTEXT MENU */
+let _ctx={chatId:null,msgId:null,text:""};
+const CTX_EMOJIS=["👍","❤️","😂","🔥","😮","😢","🎉","💯","🤔","👏","🙏","👎"];
+function openCtx(e,chatId,msgId,text){
+  e.preventDefault();e.stopPropagation();
+  _ctx={chatId,msgId,text};
+  const m=id("ctx-menu");
+  id("ctx-rxns").innerHTML=CTX_EMOJIS.map(em=>`<button class="ctx-rxn" onclick="addQ({type:'react',chat_id:${chatId},msg_id:${msgId},emoji:'${em}'});closeCtx()" title="${em}">${em}</button>`).join("");
+  m.classList.add("on");
+  const vw=window.innerWidth,vh=window.innerHeight;
+  m.style.left=e.clientX+"px";m.style.top=e.clientY+"px";
+  requestAnimationFrame(()=>{
+    const r=m.getBoundingClientRect();
+    if(r.right>vw)m.style.left=(e.clientX-r.width)+"px";
+    if(r.bottom>vh)m.style.top=(e.clientY-r.height)+"px";
+  });
+}
+function closeCtx(){id("ctx-menu").classList.remove("on");}
+function ctxCopy(){if(_ctx.text)navigator.clipboard.writeText(_ctx.text).then(()=>snack("Copied to clipboard"));else snack("No text");closeCtx();}
+function ctxReply(){if(_ctx.msgId)setReply(_ctx.msgId,_ctx.text.slice(0,40)||"Message");closeCtx();}
+function ctxForward(){
+  const to=prompt("Forward to chat ID or username:");
+  if(to)addQ({type:"forward",from_chat_id:_ctx.chatId,msg_id:_ctx.msgId,to_chat_id:isNaN(to)?to:parseInt(to)});
+  closeCtx();
+}
+function ctxPin(){addQ({type:"pin_message",chat_id:_ctx.chatId,msg_id:_ctx.msgId});snack("Queued: pin");closeCtx();}
+function ctxDelete(){if(confirm("Delete this message for everyone?"))addQ({type:"delete_message",chat_id:_ctx.chatId,msg_id:_ctx.msgId,revoke:true});closeCtx();}
+function ctxReactMore(){const e=prompt("Enter emoji:");if(e)addQ({type:"react",chat_id:_ctx.chatId,msg_id:_ctx.msgId,emoji:e.trim()});closeCtx();}
+
+/* JOIN CHAT */
+function openJoin(){id("join-modal").classList.add("on");setTimeout(()=>id("join-inp").focus(),60);}
+function closeJoin(){id("join-modal").classList.remove("on");id("join-inp").value="";}
+function submitJoin(){
+  const val=id("join-inp").value.trim();
+  if(!val){snack("Enter a username or link");return;}
+  addQ({type:"join_chat",target:val});
+  snack("Queued: join "+val);
+  closeJoin();
+}
 </script>
 </body>
 </html>

@@ -134,6 +134,18 @@ def _serialize_message(msg, chat_id: int) -> dict:
         from_id = msg.from_user.id
     elif msg.sender_chat:
         from_id = msg.sender_chat.id
+
+    # serialize quoted/reply message preview
+    reply_preview = None
+    if getattr(msg, "reply_to_message", None):
+        rm = msg.reply_to_message
+        reply_preview = {
+            "id":      rm.id,
+            "text":    rm.text or rm.caption or "",
+            "from_id": rm.from_user.id if rm.from_user else None,
+            "media":   _media_info(rm),
+        }
+
     return {
         "id":              msg.id,
         "chat_id":         chat_id,
@@ -143,6 +155,7 @@ def _serialize_message(msg, chat_id: int) -> dict:
         "media":           _media_info(msg),
         "reactions":       _reactions(msg),
         "reply_to":        msg.reply_to_message_id,
+        "reply_preview":   reply_preview,
         "pinned":          getattr(msg, "pinned", False),
         "out":             getattr(msg, "outgoing", False),
         "views":           getattr(msg, "views", None),
