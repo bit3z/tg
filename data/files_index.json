@@ -1,0 +1,57 @@
+{
+  "-1002258575230_30644": {
+    "chat_id": -1002258575230,
+    "msg_id": 30644,
+    "filename": "file_-1002258575230_30644",
+    "safe_name": "-1002258575230_30644",
+    "enc_path": "data/files/-1002258575230_30644.enc",
+    "size": 41739,
+    "mime_type": null,
+    "label": "file",
+    "downloaded_at": "2026-06-15T11:02:47.316576+00:00"
+  },
+  "-1002258575230_30643": {
+    "chat_id": -1002258575230,
+    "msg_id": 30643,
+    "filename": "file_-1002258575230_30643",
+    "safe_name": "-1002258575230_30643",
+    "enc_path": "data/files/-1002258575230_30643.enc",
+    "size": 172922,
+    "mime_type": null,
+    "label": "file",
+    "downloaded_at": "2026-06-15T11:02:50.290252+00:00"
+  },
+  "177590614_55374": {
+    "chat_id": 177590614,
+    "msg_id": 55374,
+    "filename": "file_177590614_55374",
+    "safe_name": "177590614_55374",
+    "enc_path": "data/files/177590614_55374.enc",
+    "size": 74956,
+    "mime_type": null,
+    "label": "file",
+    "downloaded_at": "2026-06-15T11:02:54.016994+00:00"
+  },
+  "177590614_55373.mp3": {
+    "chat_id": 177590614,
+    "msg_id": 55373,
+    "filename": "Reza-Bahram-Yar-128.mp3",
+    "safe_name": "177590614_55373.mp3",
+    "enc_path": "data/files/177590614_55373.mp3.enc",
+    "size": 3463651,
+    "mime_type": "audio/mpeg",
+    "label": "file",
+    "downloaded_at": "2026-06-15T11:02:56.982316+00:00"
+  },
+  "177590614_55372.MP4": {
+    "chat_id": 177590614,
+    "msg_id": 55372,
+    "filename": "IMG_8592.MP4",
+    "safe_name": "177590614_55372.MP4",
+    "enc_path": "data/files/177590614_55372.MP4.enc",
+    "size": 2001479,
+    "mime_type": "video/mp4",
+    "label": "file",
+    "downloaded_at": "2026-06-15T11:02:59.458168+00:00"
+  }
+}
