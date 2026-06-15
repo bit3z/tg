@@ -20,6 +20,8 @@ API_ID         = int(os.environ["TG_API_ID"])
 API_HASH       = os.environ["TG_API_HASH"]
 SESSION_STRING = os.environ["TG_SESSION_STRING"].strip()
 RAW_KEY        = os.environ["DATA_KEY"]
+UI_KEY         = os.environ["UI_ENCRYPTION_KEY"]
+UI_KEY         = os.environ["UI_ENCRYPTION_KEY"]
 QUEUE_B64      = os.environ["QUEUE_B64"]
 
 DATA_DIR     = Path("data")
@@ -39,10 +41,11 @@ def _fernet(passphrase: str) -> Fernet:
     )
     return Fernet(key)
 
-F = _fernet(RAW_KEY)
+F    = _fernet(RAW_KEY)
+F_ui = _fernet(UI_KEY)  # browser uses this key
 
 def encrypt_bytes(data: bytes) -> bytes:
-    return F.encrypt(data)
+    return F_ui.encrypt(data)  # UI key so browser can decrypt
 
 def load_files_index() -> dict:
     if FILES_INDEX.exists():
