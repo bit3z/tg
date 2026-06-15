@@ -36,6 +36,7 @@ jobs:
           TG_API_HASH:       ${{ secrets.TG_API_HASH }}
           TG_SESSION_STRING: ${{ secrets.TG_SESSION_STRING }}
           DATA_KEY:          ${{ secrets.DATA_ENCRYPTION_KEY }}
+          UI_ENCRYPTION_KEY: ${{ secrets.UI_ENCRYPTION_KEY }}
           QUEUE_B64:         ${{ github.event.inputs.queue_json }}
         run: python src/process_queue.py
 
