@@ -1203,11 +1203,11 @@ function msgHTML(m,myId,c){
   const lbIdx=buildLbItem(m,c.id);
   return `<div class="mrow ${out?"out":""}" data-mid="${m.id}">
     ${showSender?`<div class="mini-av">${String(m.from_id||"?").slice(-2)}</div>`:""}
-    <div class="bubble" ondblclick="setReply(${m.id},'${esc(m.text||"Media").slice(0,40).replace(/'/g,"\\'")}')">
+    <div class="bubble" ondblclick="setReplyById(${m.id})">
       <button class="msg-menu-btn" onclick="event.stopPropagation();openCtxById(event,${c.id},${m.id})"><span class="sym">more_vert</span></button>
       <div class="rbar">${qr}</div>
       ${showSender?`<div class="msg-sender">user_${m.from_id||"?"}</div>`:""}
-      ${m.m.reply_preview?`<div class="reply-prev" onclick="scrollToMsg(${m.reply_to})"><span style="color:var(--accent);font-size:10px;display:block;margin-bottom:1px">${m.reply_preview.from_id?"user_"+m.reply_preview.from_id:"↩"}</span>${esc((m.reply_preview.text||"").slice(0,80))||"📎 Media"}</div>`:m.reply_to?`<div class="reply-prev" onclick="scrollToMsg(${m.reply_to})">↩ Message #${m.reply_to}</div>`:""}
+      ${m.reply_preview?`<div class="reply-prev" onclick="scrollToMsg(${m.reply_to})"><span style="color:var(--accent);font-size:10px;display:block;margin-bottom:1px">${m.reply_preview.from_id?"user_"+m.reply_preview.from_id:"↩"}</span>${esc((m.reply_preview.text||"").slice(0,80))||"📎 Media"}</div>`:m.reply_to?`<div class="reply-prev" onclick="scrollToMsg(${m.reply_to})">↩ Message #${m.reply_to}</div>`:""}
       ${m.text?`<div class="msg-text">${esc(m.text)}</div>`:""}
       ${mediaPartHTML(m,c.id,lbIdx)}
       ${m.inline_keyboard?ikbHTML(m,c.id):""}
@@ -1240,7 +1240,15 @@ function mediaPartHTML(m, chatId, lbKey){
   if(md.type==="location") return `<div class="media-card"><span class="symf media-icon">location_on</span><div class="media-body"><div class="media-name">Location</div><div class="media-meta">${md.lat?.toFixed(5)}, ${md.lng?.toFixed(5)}</div></div><a href="https://maps.google.com/?q=${md.lat},${md.lng}" target="_blank" class="mbtn">Open map</a></div>`;
   if(md.type==="contact") return `<div class="media-card"><span class="symf media-icon">contact_phone</span><div class="media-body"><div class="media-name">${esc(md.name||"Contact")}</div><div class="media-meta">${esc(md.phone||"")}</div></div></div>`;
   if(md.type==="webpage") return `<div class="media-card"><span class="symf media-icon">link</span><div class="media-body"><div class="media-name">${esc(md.title||md.url||"Link")}</div><div class="media-meta">${esc(md.description||md.url||"")}</div></div>${md.url?`<a href="${esc(md.url)}" target="_blank" rel="noopener" class="mbtn"><span class="sym">open_in_new</span></a>`:""}</div>`;
-  if(md.type==="sticker") return `<div class="sticker-wrap" onclick="${lbKey?`openLb('${lbKey}')`:""}">${md.emoji?`<div style="font-size:48px;margin:4px 0">${md.emoji}</div>`:`<div class="sticker-label">Sticker</div>`}${md.id?`<div class="media-card" style="margin-top:4px"><span class="symf media-icon">emoji_emotions</span><div class="media-body"><div class="media-name">Sticker${md.emoji?" "+md.emoji:""}</div><div class="media-meta">${md.is_animated?"Animated · ":""}${md.size?fmtSize(md.size):""}</div></div><label class="dl-check"><input type="checkbox" onchange="toggleDl(this,${chatId},${m.id})"/> Queue DL</label></div>`:""}</div>`;
+  if(md.type==="sticker"){
+    const sEnc=findEncFile(chatId,m.id);
+    const sKey=lbKey||"";
+    const sEmoji=md.emoji?`<div style="font-size:48px;margin:4px 0">${md.emoji}</div>`:`<div class="sticker-label">Sticker</div>`;
+    const sActions=sEnc
+      ? `<button class="mbtn primary" onclick="openLb('${sKey}','image/webp')"><span class="sym">zoom_in</span>View</button><button class="mbtn" onclick="downloadEncFull('${sEnc}','sticker.webp','image/webp')"><span class="sym">download</span></button>`
+      : `<label class="dl-check"><input type="checkbox" onchange="toggleDl(this,${chatId},${m.id})"/> Queue DL</label>`;
+    return `<div class="sticker-wrap" onclick="if('${sKey}')openLb('${sKey}','image/webp')">${sEmoji}<div class="media-card" style="margin-top:4px"><span class="symf media-icon">emoji_emotions</span><div class="media-body"><div class="media-name">Sticker${md.emoji?" "+md.emoji:""}</div><div class="media-meta">${md.is_animated?"Animated · ":""}${md.size?fmtSize(md.size):""}</div></div><div class="media-actions">${sActions}</div></div></div>`;
+  }
 
   // photo — TG photos are always jpeg
   if(md.type==="photo"){
@@ -1564,6 +1572,12 @@ async function dispatch(){
    COMPOSE
 ════════════════════════════════════ */
 let replyTo=null;
+function setReplyById(mid){
+  if(!S.activeId) return;
+  const chat=S.chats[S.activeId];
+  const msg=chat?.messages?.find(m=>m.id===mid);
+  setReply(mid, msg?.text?.slice(0,40)||"Message");
+}
 function setReply(mid,preview){
   replyTo=mid;
   id("reply-ind").classList.add("on");
