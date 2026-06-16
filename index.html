@@ -766,6 +766,9 @@ a:hover { text-decoration:underline; }
       <button class="lock-btn" id="lock-btn" onclick="tryUnlock()">Continue</button>
     </div>
     <div class="lock-footer">Secured with Fernet encryption</div>
+    <div style="margin-top:8px">
+      <button onclick="testConfigEnc()" style="background:none;border:1px solid var(--border2);color:var(--text3);border-radius:var(--r);padding:5px 12px;font-family:inherit;font-size:11px;cursor:pointer">Test config.enc fetch</button>
+    </div>
   </div>
 </div>
 
@@ -981,42 +984,78 @@ async function tryUnlock(){
   const err=id("lerr"), inf=id("linf"), btn=id("lock-btn");
   err.textContent=""; inf.textContent="";
   if(!val){err.textContent="Enter your password.";return;}
-  btn.disabled=true; inf.textContent="Fetching config…";
+  btn.disabled=true;
+
+  // STEP 1: fetch config.enc
+  inf.textContent="Step 1/4: Fetching config.enc…";
   let enc;
   try{
-    const r=await fetch(`${CFG.dataBase}/config.enc?_=${Date.now()}`);
-    if(!r.ok) throw new Error(`HTTP ${r.status}`);
+    const url=`${CFG.dataBase}/config.enc?_=${Date.now()}`;
+    const r=await fetch(url);
+    inf.textContent=`Step 1/4: HTTP ${r.status} from ${url}`;
+    if(!r.ok) throw new Error(`HTTP ${r.status} — file missing, run fetch workflow first`);
     enc=new Uint8Array(await r.arrayBuffer());
+    inf.textContent=`Step 1/4: Got ${enc.length} bytes ✓`;
+    await new Promise(r=>setTimeout(r,400));
   }catch(e){
-    err.textContent="Could not load config.enc — run the fetch workflow first.";
+    err.textContent=e.message;
     inf.textContent=""; btn.disabled=false; return;
   }
-  inf.textContent="Decrypting…";
-  let cfg;
+
+  // STEP 2: derive key
+  inf.textContent="Step 2/4: Deriving key from password…";
+  let key, cfg;
   try{
-    const key=await deriveKey(val);
+    key=await deriveKey(val);
+    inf.textContent=`Step 2/4: Key derived (${key.length} bytes) ✓`;
+    await new Promise(r=>setTimeout(r,300));
+  }catch(e){
+    err.textContent="Key derivation failed: "+e.message;
+    inf.textContent=""; btn.disabled=false; return;
+  }
+
+  // STEP 3: decrypt
+  inf.textContent="Step 3/4: Decrypting…";
+  try{
     cfg=await fernetDecryptJSON(key,enc);
     uiKey=key;
+    inf.textContent="Step 3/4: Decrypted ✓";
+    await new Promise(r=>setTimeout(r,300));
   }catch(e){
-    // HMAC failure = wrong password; JSON parse failure = corrupted file
     if(e.message&&e.message.includes("HMAC")){
-      err.textContent="Wrong password.";
-    } else if(e.message&&e.message.includes("JSON")){
-      err.textContent="config.enc is corrupted — re-run the fetch workflow.";
+      err.textContent="Wrong password (HMAC mismatch). Make sure UI_ENCRYPTION_KEY secret matches your login password exactly.";
+    } else if(e.message&&(e.message.includes("JSON")||e.message.includes("parse"))){
+      err.textContent="Decrypted but JSON is invalid — config.enc may be corrupted. Re-run fetch workflow.";
     } else {
-      err.textContent="Decryption failed: "+e.message;
+      err.textContent="Decrypt error: "+e.message;
     }
     inf.textContent=""; btn.disabled=false; return;
   }
-  if(!cfg||typeof cfg!=="object"){
-    err.textContent="config.enc is empty or corrupted — re-run the fetch workflow.";
+
+  // STEP 4: verify password hash
+  inf.textContent="Step 4/4: Verifying password…";
+  try{
+    if(!cfg||typeof cfg!=="object"||!cfg.password_hash){
+      throw new Error("config.enc missing password_hash field — re-run fetch workflow");
+    }
+    const hash=await sha256hex(val);
+    if(hash!==cfg.password_hash){
+      err.textContent=`Wrong password. Hash mismatch:\nGot:      ${hash.slice(0,16)}…\nExpected: ${cfg.password_hash.slice(0,16)}…`;
+      inf.textContent=""; btn.disabled=false; return;
+    }
+    inf.textContent="Step 4/4: Verified ✓";
+    await new Promise(r=>setTimeout(r,300));
+  }catch(e){
+    err.textContent=e.message;
     inf.textContent=""; btn.disabled=false; return;
   }
-  if(await sha256hex(val)!==cfg.password_hash){
-    err.textContent="Wrong password.";
-    inf.textContent=""; btn.disabled=false; return;
-  }
-  CFG.ghToken=cfg.gh_token; CFG.ghOwner=cfg.gh_owner; CFG.ghRepo=cfg.gh_repo;
+
+  // SUCCESS
+  CFG.ghToken=cfg.gh_token||"";
+  CFG.ghOwner=cfg.gh_owner||"";
+  CFG.ghRepo =cfg.gh_repo ||"";
+  inf.textContent="Launching…";
+  await new Promise(r=>setTimeout(r,200));
   id("lock").style.display="none";
   id("app").classList.add("on");
   initApp();
@@ -1165,7 +1204,7 @@ function msgHTML(m,myId,c){
   return `<div class="mrow ${out?"out":""}" data-mid="${m.id}">
     ${showSender?`<div class="mini-av">${String(m.from_id||"?").slice(-2)}</div>`:""}
     <div class="bubble" ondblclick="setReply(${m.id},'${esc(m.text||"Media").slice(0,40).replace(/'/g,"\\'")}')">
-      <button class="msg-menu-btn" onclick="event.stopPropagation();openCtx(event,${c.id},${m.id},`${(m.text||"").replace(/`/g,String.fromCharCode(96))}`)"><span class="sym">more_vert</span></button>
+      <button class="msg-menu-btn" onclick="event.stopPropagation();openCtxById(event,${c.id},${m.id})"><span class="sym">more_vert</span></button>
       <div class="rbar">${qr}</div>
       ${showSender?`<div class="msg-sender">user_${m.from_id||"?"}</div>`:""}
       ${m.m.reply_preview?`<div class="reply-prev" onclick="scrollToMsg(${m.reply_to})"><span style="color:var(--accent);font-size:10px;display:block;margin-bottom:1px">${m.reply_preview.from_id?"user_"+m.reply_preview.from_id:"↩"}</span>${esc((m.reply_preview.text||"").slice(0,80))||"📎 Media"}</div>`:m.reply_to?`<div class="reply-prev" onclick="scrollToMsg(${m.reply_to})">↩ Message #${m.reply_to}</div>`:""}
@@ -1661,11 +1700,32 @@ function mediaLabel(m){if(!m)return"";return m.type==="photo"?"Photo":m.type==="
 function mimeIcon(mime){if(!mime)return"description";if(mime.startsWith("image"))return"image";if(mime.startsWith("video"))return"movie";if(mime.startsWith("audio")||mime==="application/ogg")return"audio_file";if(mime.includes("pdf"))return"picture_as_pdf";if(mime.includes("zip")||mime.includes("archive"))return"folder_zip";if(mime.includes("text"))return"text_snippet";return"description";}
 
 document.addEventListener("keydown",e=>{if(e.key==="Escape"){closeLb();closeFiles();closeCtx();closeJoin();}});
+
+async function testConfigEnc(){
+  const inf=id("linf"), err=id("lerr");
+  err.textContent=""; inf.textContent="Testing…";
+  try{
+    const r=await fetch("./data/config.enc?_="+Date.now());
+    const bytes=new Uint8Array(await r.arrayBuffer());
+    const b64preview=btoa(String.fromCharCode(...bytes.slice(0,16)));
+    inf.textContent=`HTTP ${r.status} · ${bytes.length} bytes · starts: ${b64preview}…`;
+    if(bytes[0]!==0x80) err.textContent="Warning: first byte is 0x"+bytes[0].toString(16)+", expected 0x80 (not a valid Fernet token)";
+    else err.textContent="";
+  }catch(e){
+    inf.textContent="";
+    err.textContent="Fetch failed: "+e.message;
+  }
+}
 document.addEventListener("click",e=>{if(!e.target.closest("#ctx-menu")&&!e.target.closest(".msg-menu-btn"))closeCtx();});
 
 /* CONTEXT MENU */
 let _ctx={chatId:null,msgId:null,text:""};
 const CTX_EMOJIS=["👍","❤️","😂","🔥","😮","😢","🎉","💯","🤔","👏","🙏","👎"];
+function openCtxById(e,chatId,msgId){
+  const chat=S.chats[chatId];
+  const msg=chat?.messages?.find(m=>m.id===msgId);
+  openCtx(e,chatId,msgId,msg?.text||"");
+}
 function openCtx(e,chatId,msgId,text){
   e.preventDefault();e.stopPropagation();
   _ctx={chatId,msgId,text};
