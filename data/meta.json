@@ -5,8 +5,12 @@
     "username": "VxL_Re"
   },
   "initialized": true,
-  "last_sync": "2026-06-17T21:56:34.415911+00:00",
+  "last_sync": "2026-06-17T23:17:38.183785+00:00",
   "sync_log": [
+    {
+      "chat": "VPN MARKET",
+      "fetched": 50
+    },
     {
       "chat": "X_BaT",
       "fetched": 50
@@ -21,10 +25,6 @@
     },
     {
       "chat": "\ud835\udde1\ud835\uddf2\ud835\ude05\ud835\udde3\ud835\uddf2\ud835\uddff\ud835\ude00 | BACKUP",
-      "fetched": 50
-    },
-    {
-      "chat": "VPN MARKET",
       "fetched": 50
     },
     {
