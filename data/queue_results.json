@@ -1,18 +1,14 @@
 {
-  "processed_at": "2026-06-19T20:40:52.306599+00:00",
+  "processed_at": "2026-06-19T20:41:59.779031+00:00",
   "total": 1,
-  "ok": 1,
-  "errors": 0,
+  "ok": 0,
+  "errors": 1,
   "results": [
     {
       "index": 0,
       "type": "join_chat",
-      "status": "ok",
-      "result": {
-        "ok": true,
-        "chat_id": -1001493181244,
-        "title": "Musics Hunter"
-      }
+      "status": "error",
+      "error": "Telegram says: [400 CHANNEL_INVALID] - The channel parameter is invalid (caused by \"channels.JoinChannel\")"
     }
   ]
 }
