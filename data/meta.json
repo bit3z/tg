@@ -5,14 +5,14 @@
     "username": null
   },
   "initialized": true,
-  "last_sync": "2026-06-19T22:42:44.254171+00:00",
+  "last_sync": "2026-06-19T23:47:44.961135+00:00",
   "sync_log": [
     {
-      "chat": "VPN MARKET",
+      "chat": "\u0634\u06cc\u0645\u06cc \u0646\u0648\u062a\u0631\u0648\u0646",
       "fetched": 50
     },
     {
-      "chat": "\ud835\udc04\ud835\udc2b\ud835\udc2b\ud835\udc28\ud835\udc2b \ud835\udfd2\ud835\udfce\ud835\udfd2\u2122",
+      "chat": "VPN MARKET",
       "fetched": 50
     },
     {
@@ -36,5 +36,5 @@
       "fetched": 50
     }
   ],
-  "total_chats": 27
+  "total_chats": 28
 }
