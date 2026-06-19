@@ -1,5 +1,5 @@
 {
-  "processed_at": "2026-06-19T20:33:24.572841+00:00",
+  "processed_at": "2026-06-19T20:40:52.306599+00:00",
   "total": 1,
   "ok": 1,
   "errors": 0,
@@ -10,8 +10,8 @@
       "status": "ok",
       "result": {
         "ok": true,
-        "chat_id": -1001810095128,
-        "title": "\u0634\u06cc\u0645\u06cc \u0646\u0648\u062a\u0631\u0648\u0646"
+        "chat_id": -1001493181244,
+        "title": "Musics Hunter"
       }
     }
   ]
