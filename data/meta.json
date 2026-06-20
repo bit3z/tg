@@ -5,12 +5,8 @@
     "username": null
   },
   "initialized": true,
-  "last_sync": "2026-06-19T23:47:44.961135+00:00",
+  "last_sync": "2026-06-20T02:10:57.953621+00:00",
   "sync_log": [
-    {
-      "chat": "\u0634\u06cc\u0645\u06cc \u0646\u0648\u062a\u0631\u0648\u0646",
-      "fetched": 50
-    },
     {
       "chat": "VPN MARKET",
       "fetched": 50
