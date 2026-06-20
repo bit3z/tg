@@ -10,6 +10,11 @@ on:
         required: false
         default: 'false'
         type: boolean
+      ghost_mode:
+        description: 'Ghost mode (skip marking chats as read during fetch)'
+        required: false
+        default: 'false'
+        type: boolean
 
 permissions:
   contents: write
@@ -31,20 +36,15 @@ jobs:
           python-version: '3.11'
 
       - name: Install dependencies
-        run: pip install pyrogram tgcrypto cryptography
+        run: pip install pyrogram tgcrypto
 
       - name: Run fetch script
         env:
           TG_API_ID:            ${{ secrets.TG_API_ID }}
           TG_API_HASH:          ${{ secrets.TG_API_HASH }}
           TG_SESSION_STRING:    ${{ secrets.TG_SESSION_STRING }}
-          DATA_KEY:             ${{ secrets.DATA_ENCRYPTION_KEY }}
-          UI_ENCRYPTION_KEY:    ${{ secrets.UI_ENCRYPTION_KEY }}
-          GH_DISPATCH_TOKEN:    ${{ secrets.GH_DISPATCH_TOKEN }}
-          MASTER_PASSWORD_HASH: ${{ secrets.MASTER_PASSWORD_HASH }}
-          GH_OWNER:             ${{ secrets.GH_OWNER }}
-          GH_REPO:              ${{ secrets.GH_REPO }}
           FORCE_FULL:           ${{ github.event.inputs.force_full_fetch || 'false' }}
+          GHOST_MODE:           ${{ github.event.inputs.ghost_mode || 'false' }}
           DEFAULT_FETCH_COUNT:  '20'
           DEFAULT_UPDATE_COUNT: '50'
         run: python src/fetch_messages.py

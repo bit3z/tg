@@ -1,0 +1,48 @@
+name: Cleanup Downloaded Files
+
+on:
+  workflow_dispatch:
+    inputs:
+      exclude_profile_pics:
+        description: 'Keep profile pictures (exclude from deletion)'
+        required: false
+        default: 'true'
+        type: boolean
+      older_than_days:
+        description: 'Only delete files older than N days (0 = delete all)'
+        required: false
+        default: '0'
+        type: string
+
+permissions:
+  contents: write
+
+jobs:
+  cleanup:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Run cleanup script
+        env:
+          EXCLUDE_PROFILE_PICS: ${{ github.event.inputs.exclude_profile_pics || 'true' }}
+          OLDER_THAN_DAYS:      ${{ github.event.inputs.older_than_days || '0' }}
+        run: python src/cleanup_files.py
+
+      - name: Commit cleanup
+        run: |
+          git config user.name  "tg-relay[bot]"
+          git config user.email "tg-relay[bot]@users.noreply.github.com"
+          git add data/
+          git diff --cached --quiet || git commit -m "chore: cleanup downloaded files [$(date -u '+%Y-%m-%dT%H:%M:%SZ')]"
+          git push
