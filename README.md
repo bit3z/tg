@@ -1,4 +1,4 @@
-# TG Relay
+# TGx Relay
 
 A personal Telegram relay served as a GitHub Page. Private, password-locked, Material You design.
 
