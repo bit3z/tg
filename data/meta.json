@@ -5,14 +5,22 @@
     "username": null
   },
   "initialized": true,
-  "last_sync": "2026-06-20T02:10:57.953621+00:00",
+  "last_sync": "2026-06-20T06:39:54.834376+00:00",
   "sync_log": [
     {
-      "chat": "VPN MARKET",
+      "chat": "Odin Club",
       "fetched": 50
     },
     {
       "chat": "X_BaT",
+      "fetched": 50
+    },
+    {
+      "chat": "\ud835\udc04\ud835\udc2b\ud835\udc2b\ud835\udc28\ud835\udc2b \ud835\udfd2\ud835\udfce\ud835\udfd2\u2122",
+      "fetched": 50
+    },
+    {
+      "chat": "VPN MARKET",
       "fetched": 50
     },
     {
