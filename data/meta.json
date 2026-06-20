@@ -5,14 +5,14 @@
     "username": null
   },
   "initialized": true,
-  "last_sync": "2026-06-20T09:52:38.533694+00:00",
+  "last_sync": "2026-06-20T11:49:59.362130+00:00",
   "sync_log": [
     {
-      "chat": "\ud835\udc04\ud835\udc2b\ud835\udc2b\ud835\udc28\ud835\udc2b \ud835\udfd2\ud835\udfce\ud835\udfd2\u2122",
+      "chat": "\u0631\u0628\u0627\u062a \u0686\u062a \u0646\u0627\u0634\u0646\u0627\u0633 \u0628\u06af\u0648\u0645\u06af\u0648",
       "fetched": 50
     },
     {
-      "chat": "\u0627\u06cc\u0646\u062a\u0631\u0646\u062a \u0622\u0632\u0627\u062f",
+      "chat": "VPN MARKET",
       "fetched": 50
     },
     {
@@ -20,15 +20,11 @@
       "fetched": 50
     },
     {
+      "chat": "\u0627\u06cc\u0646\u062a\u0631\u0646\u062a \u0622\u0632\u0627\u062f",
+      "fetched": 50
+    },
+    {
       "chat": "\ud835\udde1\ud835\uddf2\ud835\ude05\ud835\udde3\ud835\uddf2\ud835\uddff\ud835\ude00 | BACKUP",
-      "fetched": 50
-    },
-    {
-      "chat": "Odin Club",
-      "fetched": 50
-    },
-    {
-      "chat": "VPN MARKET",
       "fetched": 50
     },
     {
@@ -44,5 +40,5 @@
       "fetched": 50
     }
   ],
-  "total_chats": 28
+  "total_chats": 29
 }
