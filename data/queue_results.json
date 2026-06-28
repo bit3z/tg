@@ -1,156 +1,20 @@
 {
-  "processed_at": "2026-06-28T18:17:34.584781+00:00",
-  "total": 14,
-  "ok": 14,
+  "processed_at": "2026-06-28T18:38:56.895124+00:00",
+  "total": 1,
+  "ok": 1,
   "errors": 0,
   "synced_chats": [
-    "6915961185",
-    "FREENET \u0645\u062c\u0644\u0647",
-    "\u0627\u06cc\u0646\u062a\u0631\u0646\u062a \u0622\u0632\u0627\u062f",
-    "APK downloader",
-    "M\u00e6hd!",
-    "Saved Messages"
+    "M\u00e6hd!"
   ],
   "results": [
     {
       "index": 0,
-      "type": "download_request",
-      "status": "ok",
-      "result": {
-        "ok": true,
-        "safe_name": "d7a638e7230977b53de13c8e.enc",
-        "filename": "file55374",
-        "size": 74956,
-        "enc_path": "data/files/d7a638e7230977b53de13c8e.enc"
-      }
-    },
-    {
-      "index": 1,
-      "type": "download_request",
-      "status": "ok",
-      "result": {
-        "ok": true,
-        "safe_name": "1dd67db08ab1c763f4be50c6.mp3.enc",
-        "filename": "Reza-Bahram-Yar-128.mp3",
-        "size": 3463651,
-        "enc_path": "data/files/1dd67db08ab1c763f4be50c6.mp3.enc"
-      }
-    },
-    {
-      "index": 2,
-      "type": "download_request",
-      "status": "ok",
-      "result": {
-        "ok": true,
-        "safe_name": "1ae81cca5027aa1210910f27.MP4.enc",
-        "filename": "IMG_8592.MP4",
-        "size": 2001479,
-        "enc_path": "data/files/1ae81cca5027aa1210910f27.MP4.enc"
-      }
-    },
-    {
-      "index": 3,
-      "type": "download_request",
-      "status": "ok",
-      "result": {
-        "ok": true,
-        "safe_name": "6bd36c0bcb0f1001d12643ca.enc",
-        "filename": "file55371",
-        "size": 116045,
-        "enc_path": "data/files/6bd36c0bcb0f1001d12643ca.enc"
-      }
-    },
-    {
-      "index": 4,
       "type": "send_message",
       "status": "ok",
       "result": {
         "ok": true,
-        "msg_id": 56534,
+        "msg_id": 56541,
         "chat_id": 177590614
-      }
-    },
-    {
-      "index": 5,
-      "type": "join_chat",
-      "status": "ok",
-      "result": {
-        "ok": true,
-        "chat_id": -1001182145213,
-        "title": "FREENET \u0645\u062c\u0644\u0647"
-      }
-    },
-    {
-      "index": 6,
-      "type": "start_bot",
-      "status": "ok",
-      "result": {
-        "ok": true,
-        "msg_id": 56535,
-        "chat_id": 8292171222
-      }
-    },
-    {
-      "index": 7,
-      "type": "download_request",
-      "status": "ok",
-      "result": {
-        "ok": false,
-        "error": "File too large (34.7 MB > 20 MB limit)"
-      }
-    },
-    {
-      "index": 8,
-      "type": "download_request",
-      "status": "ok",
-      "result": {
-        "ok": true,
-        "safe_name": "380f13e1ce9eccf2fcbe7b72.npvt.enc",
-        "filename": "Ultra FAST \ud83c\uddfa\ud83c\uddf2\ud83c\udde9\ud83c\uddea\ud83c\uddf3\ud83c\uddf1\ud83c\uddeb\ud83c\uddee\ud83c\uddf8\ud83c\uddea.npvt",
-        "size": 33592,
-        "enc_path": "data/files/380f13e1ce9eccf2fcbe7b72.npvt.enc"
-      }
-    },
-    {
-      "index": 9,
-      "type": "react",
-      "status": "ok",
-      "result": {
-        "ok": true
-      }
-    },
-    {
-      "index": 10,
-      "type": "react",
-      "status": "ok",
-      "result": {
-        "ok": true
-      }
-    },
-    {
-      "index": 11,
-      "type": "forward",
-      "status": "ok",
-      "result": {
-        "ok": true
-      }
-    },
-    {
-      "index": 12,
-      "type": "forward",
-      "status": "ok",
-      "result": {
-        "ok": true
-      }
-    },
-    {
-      "index": 13,
-      "type": "send_message",
-      "status": "ok",
-      "result": {
-        "ok": true,
-        "msg_id": 56539,
-        "chat_id": 5596414040
       }
     }
   ]
