@@ -202,6 +202,7 @@ a:hover { text-decoration:underline; }
 .ci-av.bot { background:#0f172a; color:#60a5fa; }
 .ci-av.group { background:#0f1f1a; color:#34d399; }
 .ci-av.channel { background:#1a0f1f; color:var(--accent); }
+.ci-av.saved { background:#1a1530; color:#a78bfa; }
 .ci-av-badge {
   position:absolute; bottom:-1px; right:-1px;
   width:14px; height:14px; border-radius:50%; border:2px solid var(--bg1);
@@ -238,6 +239,7 @@ a:hover { text-decoration:underline; }
 .th-av.bot { background:#0f172a; color:#60a5fa; }
 .th-av.group { background:#0f1f1a; color:#34d399; }
 .th-av.channel { background:#1a0f1f; color:var(--accent); }
+.th-av.saved { background:#1a1530; color:#a78bfa; }
 .th-info { flex:1; min-width:0; }
 .th-name { font-size:14px; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
 .th-sub { font-size:11px; color:var(--text3); }
@@ -460,6 +462,7 @@ a:hover { text-decoration:underline; }
 .det-av.bot { background:#0f172a; color:#60a5fa; }
 .det-av.group { background:#0f1f1a; color:#34d399; }
 .det-av.channel { background:#1a0f1f; color:var(--accent); }
+.det-av.saved { background:#1a1530; color:#a78bfa; }
 .det-name { font-size:15px; font-weight:600; text-align:center; }
 .det-handle { font-size:12px; color:var(--accent); font-family:'JetBrains Mono',monospace; }
 .det-kind-badge {
@@ -702,6 +705,8 @@ a:hover { text-decoration:underline; }
 /* JOIN MODAL */
 #join-modal { position:fixed; inset:0; z-index:600; background:rgba(0,0,0,.7); display:none; align-items:center; justify-content:center; }
 #join-modal.on { display:flex; }
+#cleanup-modal { position:fixed; inset:0; z-index:600; background:rgba(0,0,0,.7); display:none; align-items:center; justify-content:center; }
+#cleanup-modal.on { display:flex; }
 .join-card { width:min(400px,92vw); background:var(--bg1); border:1px solid var(--border2); border-radius:var(--r3); box-shadow:var(--e3); padding:24px; display:flex; flex-direction:column; gap:14px; }
 .join-title { font-size:15px; font-weight:600; }
 .join-sub { font-size:12px; color:var(--text3); margin-top:-8px; }
@@ -736,6 +741,92 @@ a:hover { text-decoration:underline; }
 .empty-thread .sym { font-size:48px; opacity:.2; }
 .empty-thread p { font-size:13px; }
 
+/* ══════════════════════════════════════════════
+   AVATARS (real images, lazy-decrypted)
+══════════════════════════════════════════════ */
+.ci-av img, .th-av img, .det-av img { width:100%; height:100%; object-fit:cover; border-radius:inherit; }
+.ci-av, .th-av, .det-av { position:relative; overflow:hidden; }
+
+/* ══════════════════════════════════════════════
+   CHAT LIST SECTION HEADERS (pinned / archived)
+══════════════════════════════════════════════ */
+.cl-section-hd {
+  display:flex; align-items:center; gap:6px; padding:10px 16px 4px;
+  font-size:10px; font-weight:600; letter-spacing:.05em; text-transform:uppercase;
+  color:var(--text3);
+}
+.cl-section-hd .sym { font-size:13px; }
+.cl-archived-toggle {
+  display:flex; align-items:center; gap:8px; padding:9px 16px; margin:2px 8px;
+  border-radius:var(--r2); cursor:pointer; color:var(--text2); font-size:12px;
+  border:1px dashed var(--border2);
+}
+.cl-archived-toggle:hover { background:var(--bg2); color:var(--text); }
+.cl-archived-toggle .sym { font-size:16px; color:var(--text3); }
+.ci-pin-dot { font-size:12px !important; color:var(--text3); margin-right:2px; vertical-align:middle; }
+
+/* ══════════════════════════════════════════════
+   SERVICE MESSAGES (pinned/title-changed/etc) + QUOTE
+══════════════════════════════════════════════ */
+.svc-row { display:flex; justify-content:center; margin:6px 0; }
+.svc-msg {
+  background:var(--bg2); color:var(--text3); font-size:11px; padding:5px 12px;
+  border-radius:var(--r3); text-align:center; max-width:80%;
+}
+.reply-prev.is-quote { border-left:2px solid var(--accent); background:var(--accent-bg); }
+.reply-prev .quote-tag { font-size:9px; text-transform:uppercase; letter-spacing:.04em; opacity:.7; }
+
+/* ══════════════════════════════════════════════
+   MORE-OPTIONS DROPDOWN (topbar)
+══════════════════════════════════════════════ */
+#more-dd { position:relative; }
+#more-menu {
+  position:absolute; top:calc(100% + 6px); right:0; min-width:220px;
+  background:var(--bg1); border:1px solid var(--border2); border-radius:var(--r2);
+  box-shadow:var(--e3); padding:6px; display:none; flex-direction:column; gap:2px; z-index:500;
+}
+#more-menu.on { display:flex; }
+.dd-item {
+  display:flex; align-items:center; gap:10px; padding:9px 12px; border-radius:var(--r);
+  background:none; border:none; color:var(--text2); font-family:inherit; font-size:13px;
+  cursor:pointer; text-align:left; width:100%;
+}
+.dd-item:hover { background:var(--bg3); color:var(--text); }
+.dd-item .sym { font-size:17px; color:var(--text3); flex-shrink:0; }
+.dd-sep { height:1px; background:var(--border); margin:4px 2px; }
+.dd-switch-row { display:flex; align-items:center; gap:10px; padding:9px 12px; }
+.dd-switch-row .sym { font-size:17px; color:var(--text3); }
+.dd-switch-label { flex:1; font-size:13px; color:var(--text2); }
+
+/* toggle switch */
+.tswitch { position:relative; width:32px; height:18px; flex-shrink:0; }
+.tswitch input { opacity:0; width:0; height:0; }
+.tswitch .tsl { position:absolute; inset:0; background:var(--bg4); border-radius:10px; cursor:pointer; transition:.15s; }
+.tswitch .tsl::before { content:""; position:absolute; width:14px; height:14px; left:2px; top:2px; background:var(--text2); border-radius:50%; transition:.15s; }
+.tswitch input:checked + .tsl { background:var(--accent); }
+.tswitch input:checked + .tsl::before { transform:translateX(14px); background:#fff; }
+
+/* ══════════════════════════════════════════════
+   FETCH-COUNT NUMBER INPUT (info panel)
+══════════════════════════════════════════════ */
+.det-numrow { display:flex; align-items:center; justify-content:space-between; gap:10px; padding:6px 0; }
+.det-num-input {
+  width:64px; padding:5px 8px; background:var(--bg2); border:1px solid var(--border2);
+  border-radius:var(--r); color:var(--text); font-family:inherit; font-size:12px; text-align:center;
+}
+.det-num-input:focus { outline:none; border-color:var(--accent); }
+.det-num-save { background:var(--accent); color:#fff; border:none; border-radius:var(--r); padding:5px 10px; font-size:11px; font-weight:600; cursor:pointer; }
+
+/* ══════════════════════════════════════════════
+   NEW CHAT / JOIN MODAL — mode toggle
+══════════════════════════════════════════════ */
+.join-modes { display:flex; gap:6px; }
+.join-mode-btn {
+  flex:1; padding:7px 0; border-radius:var(--r); border:1px solid var(--border2); background:var(--bg2);
+  color:var(--text2); font-family:inherit; font-size:11.5px; cursor:pointer;
+}
+.join-mode-btn.on { background:var(--accent-bg); border-color:var(--accent-border); color:var(--accent); }
+
 .sym { font-family:'Material Symbols Rounded'; font-style:normal; user-select:none; font-variation-settings:'FILL' 0,'wght' 400,'GRAD' 0,'opsz' 24; }
 .symf { font-family:'Material Symbols Rounded'; font-style:normal; user-select:none; font-variation-settings:'FILL' 1,'wght' 400,'GRAD' 0,'opsz' 24; }
 
@@ -756,19 +847,19 @@ a:hover { text-decoration:underline; }
       <div class="lock-logo-text">TG<span>Relay</span></div>
     </div>
     <div class="lock-form">
-      <label class="lock-label" for="set-owner">GitHub username</label>
-      <input class="lock-input" type="text" id="set-owner" placeholder="your-github-username" autocomplete="off"/>
-      <label class="lock-label" for="set-repo" style="margin-top:4px">Repository name</label>
-      <input class="lock-input" type="text" id="set-repo" placeholder="tg-relay" autocomplete="off"/>
-      <label class="lock-label" for="set-token" style="margin-top:4px">Personal access token</label>
+      <label class="lock-label" for="pw">Password</label>
       <div class="lock-input-wrap">
-        <input class="lock-input" type="password" id="set-token" placeholder="ghp_…" autocomplete="off"/>
-        <span class="sym lock-eye" id="tok-eye" onclick="toggleTok()">visibility_off</span>
+        <input class="lock-input" type="password" id="pw" placeholder="Enter password…" autocomplete="current-password"/>
+        <span class="sym lock-eye" id="pw-eye" onclick="togglePw()">visibility_off</span>
       </div>
       <div class="lock-msg err" id="lerr"></div>
+      <div class="lock-msg inf" id="linf"></div>
       <button class="lock-btn" id="lock-btn" onclick="tryUnlock()">Continue</button>
     </div>
-    <div class="lock-footer">Stored only in this browser tab's session storage</div>
+    <div class="lock-footer">Secured with Fernet encryption</div>
+    <div style="margin-top:8px">
+      <button onclick="testConfigEnc()" style="background:none;border:1px solid var(--border2);color:var(--text3);border-radius:var(--r);padding:5px 12px;font-family:inherit;font-size:11px;cursor:pointer">Test config.enc fetch</button>
+    </div>
   </div>
 </div>
 
@@ -785,11 +876,23 @@ a:hover { text-decoration:underline; }
       <span class="stxt" id="stxt">loading</span>
     </div>
     <div class="topbar-space"></div>
-    <button class="tb-btn" onclick="triggerFetch()" title="Sync now"><span class="sym tb-btn-icon" id="sync-ico">sync</span></button>
-    <button class="tb-btn" id="fab-topbtn" onclick="toggleFab()" title="Queue &amp; Tracker" style="position:relative"><span class="sym" id="fab-ico">pending_actions</span><div id="fab-badge" style="position:absolute;top:4px;right:4px;min-width:14px;height:14px;padding:0 3px;background:var(--accent);color:#fff;border-radius:7px;font-size:9px;font-weight:700;display:none;align-items:center;justify-content:center"></div></button>
-    <button class="tb-btn" onclick="openJoin()" title="Join chat"><span class="sym">group_add</span></button>
-    <button class="tb-btn" id="ghost-btn" onclick="toggleGhost()" title="Ghost mode: viewing won't auto mark-read"><span class="sym" id="ghost-ico">visibility</span></button>
-    <button class="tb-btn" onclick="showFiles()" title="Downloaded files"><span class="sym">folder_open</span></button>
+    <button class="tb-btn" id="fab-topbtn" onclick="toggleFab()" title="Queue &amp; Sync" style="position:relative"><span class="sym" id="fab-ico">sync</span><div id="fab-badge" style="position:absolute;top:4px;right:4px;min-width:14px;height:14px;padding:0 3px;background:var(--accent);color:#fff;border-radius:7px;font-size:9px;font-weight:700;display:none;align-items:center;justify-content:center"></div></button>
+    <button class="tb-btn" onclick="openJoin()" title="New chat / Join"><span class="sym">group_add</span></button>
+    <div id="more-dd">
+      <button class="tb-btn" onclick="toggleMoreMenu()" title="More options"><span class="sym">more_vert</span></button>
+      <div id="more-menu">
+        <button class="dd-item" onclick="closeMoreMenu();showFiles()"><span class="sym">folder_open</span>Downloaded files</button>
+        <button class="dd-item" onclick="closeMoreMenu();openCleanup()"><span class="sym">cleaning_services</span>Clean up files…</button>
+        <div class="dd-sep"></div>
+        <div class="dd-switch-row">
+          <span class="sym">visibility_off</span>
+          <span class="dd-switch-label">Ghost mode</span>
+          <label class="tswitch"><input type="checkbox" id="ghost-toggle" onchange="setGhostMode(this.checked)"/><span class="tsl"></span></label>
+        </div>
+        <div class="dd-sep"></div>
+        <button class="dd-item" onclick="closeMoreMenu();toggleNav()"><span class="sym">menu</span>Toggle nav</button>
+      </div>
+    </div>
     <button class="tb-btn" onclick="toggleNav()" title="Toggle nav"><span class="sym">menu</span></button>
   </div>
 
@@ -812,6 +915,7 @@ a:hover { text-decoration:underline; }
         <span class="nchip on" onclick="setFilter('all',this)">All</span>
         <span class="nchip" onclick="setFilter('unread',this)">Unread</span>
         <span class="nchip" onclick="setFilter('media',this)">Media</span>
+        <span class="nchip" onclick="setFilter('archived',this)">Archived</span>
       </div>
       <div id="chat-list"></div>
     </div>
@@ -909,41 +1013,88 @@ a:hover { text-decoration:underline; }
   <button class="ctx-item danger" onclick="ctxDelete()"><span class="sym">delete</span>Delete</button>
 </div>
 
-<!-- JOIN MODAL -->
+<!-- JOIN / NEW CHAT MODAL -->
 <div id="join-modal" onclick="if(event.target===this)closeJoin()">
   <div class="join-card">
-    <div class="join-title">Join a chat</div>
-    <div class="join-sub">Enter a @username, invite link (t.me/+…), or numeric chat ID</div>
+    <div class="join-title">New chat</div>
+    <div class="join-modes">
+      <button class="join-mode-btn on" id="jm-join" onclick="setJoinMode('join')">Join chat</button>
+      <button class="join-mode-btn" id="jm-bot" onclick="setJoinMode('start_bot')">Start a bot</button>
+      <button class="join-mode-btn" id="jm-msg" onclick="setJoinMode('message')">Message user</button>
+    </div>
+    <div class="join-sub" id="join-sub">Enter a @username, invite link (t.me/+…), or numeric chat ID</div>
     <input class="join-input" id="join-inp" placeholder="@username or https://t.me/+abc123…" onkeydown="if(event.key==='Enter')submitJoin()"/>
+    <input class="join-input" id="join-inp2" style="display:none" placeholder="Message text…" onkeydown="if(event.key==='Enter')submitJoin()"/>
     <div class="join-row">
       <button class="jbtn sec" onclick="closeJoin()">Cancel</button>
-      <button class="jbtn pri" onclick="submitJoin()">Join</button>
+      <button class="jbtn pri" id="join-submit-btn" onclick="submitJoin()">Join</button>
+    </div>
+  </div>
+</div>
+
+<!-- CLEANUP FILES MODAL -->
+<div id="cleanup-modal" onclick="if(event.target===this)closeCleanup()">
+  <div class="join-card">
+    <div class="join-title">Clean up downloaded files</div>
+    <div class="join-sub">Runs a workflow that deletes everything in data/files/ to keep the repo small. This can't be undone.</div>
+    <div class="dd-switch-row" style="padding:4px 0">
+      <span class="sym">account_circle</span>
+      <span class="dd-switch-label">Keep profile pictures</span>
+      <label class="tswitch"><input type="checkbox" id="cleanup-keep-pics" checked/><span class="tsl"></span></label>
+    </div>
+    <div class="join-row">
+      <button class="jbtn sec" onclick="closeCleanup()">Cancel</button>
+      <button class="jbtn pri" onclick="submitCleanup()">Run cleanup</button>
     </div>
   </div>
 </div>
 
 <script>
 /* ════════════════════════════════════
-   SETTINGS (stored in sessionStorage — repo is private, this is just convenience)
+   FERNET BROWSER DECRYPT
 ════════════════════════════════════ */
-function loadSettings(){
-  try{ return JSON.parse(sessionStorage.getItem("tgrelay_settings")||"{}"); }
-  catch(e){ return {}; }
+async function deriveKey(pw) {
+  return new Uint8Array(await crypto.subtle.digest("SHA-256", new TextEncoder().encode(pw)));
 }
-function saveSettings(s){
-  sessionStorage.setItem("tgrelay_settings", JSON.stringify(s));
+async function fernetDecrypt(keyBytes, raw) {
+  // raw is Uint8Array of the .enc file bytes (UTF-8 encoded base64url token)
+  const b64 = new TextDecoder().decode(raw).trim();
+  let s = b64.replace(/-/g,"+").replace(/_/g,"/");
+  while(s.length%4) s+="=";
+  const buf = Uint8Array.from(atob(s), c=>c.charCodeAt(0));
+  if(buf[0] !== 0x80) throw new Error("Not a Fernet token");
+  const iv   = buf.slice(9,25);
+  const ct   = buf.slice(25, buf.length-32);
+  const hmac = buf.slice(buf.length-32);
+  const sign = buf.slice(0, buf.length-32);
+  const sk = await crypto.subtle.importKey("raw",keyBytes.slice(0,16),{name:"HMAC",hash:"SHA-256"},false,["verify"]);
+  if(!await crypto.subtle.verify("HMAC",sk,hmac,sign)) throw new Error("Bad HMAC — wrong password");
+  const ek = await crypto.subtle.importKey("raw",keyBytes.slice(16,32),{name:"AES-CBC"},false,["decrypt"]);
+  return await crypto.subtle.decrypt({name:"AES-CBC",iv},ek,ct);
+}
+async function fernetDecryptJSON(keyBytes, raw) {
+  const plain = await fernetDecrypt(keyBytes, raw);
+  return JSON.parse(new TextDecoder().decode(plain));
+}
+async function fernetDecryptBytes(keyBytes, raw) {
+  return new Uint8Array(await fernetDecrypt(keyBytes, raw));
+}
+async function sha256hex(s) {
+  const b = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(s));
+  return [...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,"0")).join("");
 }
 
 /* ════════════════════════════════════
    STATE
 ════════════════════════════════════ */
-const CFG = { dataBase:"./data", ghOwner:"", ghRepo:"", ghToken:"" };
+const CFG = { dataBase:"./data", ghOwner:"", ghRepo:"", ghToken:"", pwHash:"" };
+let uiKey = null; // derived key bytes, kept for decrypting .enc files
 
 const S = {
   chats:{}, meta:{}, filesIndex:{},
   activeId:null, tab:"all", filter:"all",
   queue:[], tracker:[], fabOpen:false, fabTab:"queue",
-  replyTo:null, ghostMode:false,
+  replyTo:null,
   // lightbox
   lbItems:[], lbIdx:0,
 };
@@ -951,37 +1102,94 @@ const S = {
 /* ════════════════════════════════════
    LOCK
 ════════════════════════════════════ */
-function toggleTok(){
-  const i=document.getElementById("set-token"), e=document.getElementById("tok-eye");
+function togglePw(){
+  const i=document.getElementById("pw"), e=document.getElementById("pw-eye");
   i.type=i.type==="password"?"text":"password";
   e.textContent=i.type==="password"?"visibility_off":"visibility";
 }
-function tryUnlock(){
-  const owner=id("set-owner").value.trim();
-  const repo =id("set-repo").value.trim();
-  const token=id("set-token").value.trim();
-  const err=id("lerr");
-  err.textContent="";
+async function tryUnlock(){
+  const val=document.getElementById("pw").value.trim();
+  const err=id("lerr"), inf=id("linf"), btn=id("lock-btn");
+  err.textContent=""; inf.textContent="";
+  if(!val){err.textContent="Enter your password.";return;}
+  btn.disabled=true;
 
-  if(!owner||!repo||!token){
-    err.textContent="Fill in GitHub owner, repo, and token.";
-    return;
+  // STEP 1: fetch config.enc
+  inf.textContent="Step 1/4: Fetching config.enc…";
+  let enc;
+  try{
+    const url=`${CFG.dataBase}/config.enc?_=${Date.now()}`;
+    const r=await fetch(url);
+    inf.textContent=`Step 1/4: HTTP ${r.status} from ${url}`;
+    if(!r.ok) throw new Error(`HTTP ${r.status} — file missing, run fetch workflow first`);
+    enc=new Uint8Array(await r.arrayBuffer());
+    inf.textContent=`Step 1/4: Got ${enc.length} bytes ✓`;
+    await new Promise(r=>setTimeout(r,400));
+  }catch(e){
+    err.textContent=e.message;
+    inf.textContent=""; btn.disabled=false; return;
   }
 
-  CFG.ghOwner=owner; CFG.ghRepo=repo; CFG.ghToken=token;
-  saveSettings({ghOwner:owner,ghRepo:repo,ghToken:token});
+  // STEP 2: derive key
+  inf.textContent="Step 2/4: Deriving key from password…";
+  let key, cfg;
+  try{
+    key=await deriveKey(val);
+    inf.textContent=`Step 2/4: Key derived (${key.length} bytes) ✓`;
+    await new Promise(r=>setTimeout(r,300));
+  }catch(e){
+    err.textContent="Key derivation failed: "+e.message;
+    inf.textContent=""; btn.disabled=false; return;
+  }
 
+  // STEP 3: decrypt
+  inf.textContent="Step 3/4: Decrypting…";
+  try{
+    cfg=await fernetDecryptJSON(key,enc);
+    uiKey=key;
+    inf.textContent="Step 3/4: Decrypted ✓";
+    await new Promise(r=>setTimeout(r,300));
+  }catch(e){
+    if(e.message&&e.message.includes("HMAC")){
+      err.textContent="Wrong password (HMAC mismatch). Make sure UI_ENCRYPTION_KEY secret matches your login password exactly.";
+    } else if(e.message&&(e.message.includes("JSON")||e.message.includes("parse"))){
+      err.textContent="Decrypted but JSON is invalid — config.enc may be corrupted. Re-run fetch workflow.";
+    } else {
+      err.textContent="Decrypt error: "+e.message;
+    }
+    inf.textContent=""; btn.disabled=false; return;
+  }
+
+  // STEP 4: verify password hash
+  inf.textContent="Step 4/4: Verifying password…";
+  try{
+    if(!cfg||typeof cfg!=="object"||!cfg.password_hash){
+      throw new Error("config.enc missing password_hash field — re-run fetch workflow");
+    }
+    const hash=await sha256hex(val);
+    if(hash!==cfg.password_hash){
+      err.textContent=`Wrong password. Hash mismatch:\nGot:      ${hash.slice(0,16)}…\nExpected: ${cfg.password_hash.slice(0,16)}…`;
+      inf.textContent=""; btn.disabled=false; return;
+    }
+    inf.textContent="Step 4/4: Verified ✓";
+    await new Promise(r=>setTimeout(r,300));
+  }catch(e){
+    err.textContent=e.message;
+    inf.textContent=""; btn.disabled=false; return;
+  }
+
+  // SUCCESS
+  CFG.ghToken=cfg.gh_token||"";
+  CFG.ghOwner=cfg.gh_owner||"";
+  CFG.ghRepo =cfg.gh_repo ||"";
+  inf.textContent="Launching…";
+  await new Promise(r=>setTimeout(r,200));
   id("lock").style.display="none";
   id("app").classList.add("on");
   initApp();
 }
-// pre-fill from saved settings if present
-(function(){
-  const s=loadSettings();
-  if(s.ghOwner) document.getElementById("set-owner").value=s.ghOwner;
-  if(s.ghRepo)  document.getElementById("set-repo").value=s.ghRepo;
-  if(s.ghToken) document.getElementById("set-token").value=s.ghToken;
-})();
+id("pw").addEventListener("keydown",e=>{if(e.key==="Enter")tryUnlock();});
+
 /* ════════════════════════════════════
    INIT
 ════════════════════════════════════ */
@@ -999,22 +1207,23 @@ async function initApp(){
 async function loadData(){
   setSyncing(true);
   try{
-    // fetch each file independently — missing files are non-fatal
-    const safeFetch = async(url) => {
+    const safeFetchEnc = async(url) => {
       try{
         const r = await fetch(url+"?_="+Date.now());
         if(!r.ok) return null;
-        return await r.json();
-      }catch(e){ return null; }
+        const raw = new Uint8Array(await r.arrayBuffer());
+        return await fernetDecryptJSON(uiKey, raw);
+      }catch(e){ console.warn("decrypt failed for",url,e); return null; }
     };
     const [meta,chats,files] = await Promise.all([
-      safeFetch(`${CFG.dataBase}/meta.json`),
-      safeFetch(`${CFG.dataBase}/chats.json`),
-      safeFetch(`${CFG.dataBase}/files_index.json`),
+      safeFetchEnc(`${CFG.dataBase}/meta.json.enc`),
+      safeFetchEnc(`${CFG.dataBase}/chats.json.enc`),
+      safeFetchEnc(`${CFG.dataBase}/files_index.json.enc`),
     ]);
     if(meta)  S.meta       = meta;
     if(chats) S.chats      = chats;
     if(files) S.filesIndex = files;
+    const ghostEl=id("ghost-toggle"); if(ghostEl) ghostEl.checked=!!S.meta.ghost_mode;
     setSyncing(false);
     const n = Object.keys(S.chats).length;
     snack(n ? `Loaded ${n} chats` : "No data yet — run the fetch workflow");
@@ -1046,32 +1255,70 @@ function renderChats(){
   else if(S.tab==="bots")    list=list.filter(c=>c.is_bot||c.kind==="bot");
   else if(S.tab==="groups")  list=list.filter(c=>c.kind==="group");
   else if(S.tab==="channel") list=list.filter(c=>c.kind==="channel");
+
+  if(S.filter==="archived") list=list.filter(c=>c.archived);
+  else list=list.filter(c=>!c.archived); // archived chats are hidden everywhere else, like Telegram
+
   if(S.filter==="unread") list=list.filter(c=>c.unread_count>0);
   if(S.filter==="media")  list=list.filter(c=>c.messages?.some(m=>m.media));
   if(q) list=list.filter(c=>c.name.toLowerCase().includes(q));
-  list.sort((a,b)=>(b.last_message_date||"")>(a.last_message_date||"")?1:-1);
+
+  list.sort((a,b)=>{
+    if(!!b.pinned!==!!a.pinned) return b.pinned?1:-1;
+    return (b.last_message_date||"")>(a.last_message_date||"")?1:-1;
+  });
+
   const el=id("chat-list");
-  el.innerHTML=list.length?list.map(chatHTML).join(""):
-    `<div style="padding:32px;text-align:center;color:var(--text3);font-size:12px">No chats</div>`;
+  if(!list.length){
+    el.innerHTML=`<div style="padding:32px;text-align:center;color:var(--text3);font-size:12px">No chats</div>`;
+    return;
+  }
+  const pinned=list.filter(c=>c.pinned), rest=list.filter(c=>!c.pinned);
+  let html="";
+  if(S.filter!=="archived"&&pinned.length){
+    html+=`<div class="cl-section-hd"><span class="sym">push_pin</span>Pinned</div>`;
+    html+=pinned.map(chatHTML).join("");
+    if(rest.length) html+=`<div class="cl-section-hd">Chats</div>`;
+  }
+  html+=rest.map(chatHTML).join("");
+  el.innerHTML=html;
+  loadAvatars(list);
 }
 function chatHTML(c){
   const isBot=c.is_bot||c.kind==="bot";
+  const isSaved=c.kind==="saved";
   const last=c.messages?.[0];
-  const prev=last?(last.media?`📎 ${mediaLabel(last.media)}`:trunc(last.text,44)):"";
-  const avCls=isBot?"bot":c.kind==="group"?"group":c.kind==="channel"?"channel":"";
-  const ini=c.name.split(" ").slice(0,2).map(w=>w[0]||"").join("").toUpperCase();
+  const prev=last?(last.is_service?last.service_text:(last.media?`📎 ${mediaLabel(last.media)}`:trunc(last.text,44))):"";
+  const avCls=isSaved?"saved":isBot?"bot":c.kind==="group"?"group":c.kind==="channel"?"channel":"";
+  const ini=isSaved?"":c.name.split(" ").slice(0,2).map(w=>w[0]||"").join("").toUpperCase();
   const badge=isBot?`<div class="ci-av-badge bot">B</div>`:c.is_verified?`<div class="ci-av-badge verified">✓</div>`:"";
+  const avInner=isSaved?`<span class="sym" style="font-size:18px">bookmark</span>`:ini;
   return `<div class="ci ${c.id==S.activeId?"on":""}" onclick="openChat(${c.id})">
-    <div class="ci-av ${avCls}">${ini}${badge}</div>
+    <div class="ci-av ${avCls}" data-chatid="${c.id}">${avInner}${badge}</div>
     <div class="ci-body">
       <div class="ci-top">
-        <span class="ci-name">${esc(c.name)}</span>
+        <span class="ci-name">${c.pinned?'<span class="sym ci-pin-dot">push_pin</span>':''}${esc(c.name)}</span>
         <span class="ci-time">${last?fmtDate(last.date):""}</span>
       </div>
       <div class="ci-prev">${esc(prev)}</div>
     </div>
     ${c.unread_count>0?`<span class="ci-badge">${c.unread_count>99?"99+":c.unread_count}</span>`:""}
   </div>`;
+}
+
+/* lazy avatar decryption — only for chats with a downloaded profile picture */
+async function loadAvatars(list){
+  for(const c of list){
+    if(!c.avatar) continue;
+    const f=S.filesIndex[c.avatar];
+    if(!f) continue;
+    try{
+      const url=await decryptToObjectURL(f.enc_path,f.mime_type||"image/jpeg");
+      document.querySelectorAll(`[data-chatid="${c.id}"]`).forEach(elm=>{
+        elm.innerHTML=`<img src="${url}" alt=""/>`;
+      });
+    }catch(e){ /* avatar decrypt failures are non-fatal */ }
+  }
 }
 
 /* ════════════════════════════════════
@@ -1083,18 +1330,18 @@ function openChat(cid){
   id("empty-th").style.display="none";
   id("th-top").style.display="flex";
   id("compose").style.display="block";
-  // auto mark-read on open (unless ghost mode is on)
-  if(!S.ghostMode && c.unread_count>0){
-    addQSilent({type:"mark_read",chat_id:cid});
-    c.unread_count=0;
-    renderChats();
-  }
   const isBot=c.is_bot||c.kind==="bot";
+  const isSaved=c.kind==="saved";
   const av=id("th-av");
-  av.className=`th-av ${isBot?"bot":c.kind==="group"?"group":c.kind==="channel"?"channel":""}`;
-  av.textContent=c.name.split(" ").slice(0,2).map(w=>w[0]||"").join("").toUpperCase();
+  av.className=`th-av ${isSaved?"saved":isBot?"bot":c.kind==="group"?"group":c.kind==="channel"?"channel":""}`;
+  av.innerHTML=isSaved?`<span class="sym" style="font-size:18px">bookmark</span>`:c.name.split(" ").slice(0,2).map(w=>w[0]||"").join("").toUpperCase();
+  if(c.avatar && S.filesIndex[c.avatar]){
+    decryptToObjectURL(S.filesIndex[c.avatar].enc_path, S.filesIndex[c.avatar].mime_type||"image/jpeg")
+      .then(url=>{ av.innerHTML=`<img src="${url}" alt=""/>`; }).catch(()=>{});
+  }
   id("th-name").textContent=c.name;
   id("th-sub").textContent=c.username?`@${c.username}`:
+    isSaved?"Only visible to you":
     isBot?"Bot":c.kind==="group"?`Group${c.members_count?` · ${fmtNum(c.members_count)}`:""}`:
     c.kind==="channel"?`Channel${c.members_count?` · ${fmtNum(c.members_count)}`:""}`:
     "Private chat";
@@ -1122,6 +1369,9 @@ function renderMsgs(c){
 }
 
 function msgHTML(m,myId,c){
+  if(m.is_service){
+    return `<div class="svc-row" data-mid="${m.id}"><div class="svc-msg">${esc(m.service_text||"ℹ️ Service message")}</div></div>`;
+  }
   const out=m.out||m.from_id===myId;
   const showSender=!out&&c.kind!=="user"&&c.kind!=="bot";
   const qr=QE.map(e=>`<button class="rq" onclick="event.stopPropagation();addQ({type:'react',chat_id:${c.id},msg_id:${m.id},emoji:'${e}'})" title="React ${e}">${e}</button>`).join("");
@@ -1133,7 +1383,7 @@ function msgHTML(m,myId,c){
       <button class="msg-menu-btn" onclick="event.stopPropagation();openCtxById(event,${c.id},${m.id})"><span class="sym">more_vert</span></button>
       <div class="rbar">${qr}</div>
       ${showSender?`<div class="msg-sender">user_${m.from_id||"?"}</div>`:""}
-      ${m.reply_preview?`<div class="reply-prev" onclick="scrollToMsg(${m.reply_to})"><span style="color:var(--accent);font-size:10px;display:block;margin-bottom:1px">${m.reply_preview.from_id?"user_"+m.reply_preview.from_id:"↩"}</span>${esc((m.reply_preview.text||"").slice(0,80))||"📎 Media"}</div>`:m.reply_to?`<div class="reply-prev" onclick="scrollToMsg(${m.reply_to})">↩ Message #${m.reply_to}</div>`:""}
+      ${m.reply_preview?`<div class="reply-prev is-quote" onclick="scrollToMsg(${m.reply_to})"><span class="quote-tag" style="color:var(--accent);display:block;margin-bottom:1px">${m.reply_preview.from_id?"user_"+m.reply_preview.from_id:"Quote"}</span>${m.reply_preview.text?esc((m.reply_preview.text||"").slice(0,80)):(m.reply_preview.media?"📎 "+mediaLabel(m.reply_preview.media):"Quoted message")}</div>`:m.reply_to?`<div class="reply-prev" onclick="scrollToMsg(${m.reply_to})">↩ Message #${m.reply_to}</div>`:""}
       ${m.text?`<div class="msg-text">${esc(m.text)}</div>`:""}
       ${mediaPartHTML(m,c.id,lbIdx)}
       ${m.inline_keyboard?ikbHTML(m,c.id):""}
@@ -1217,16 +1467,15 @@ function mediaPartHTML(m, chatId, lbKey){
   return `<div class="media-card"><span class="symf media-icon">${icon}</span><div class="media-body"><div class="media-name">${esc(rawName)}</div><div class="media-meta">${esc(meta)}</div></div><div class="media-actions">${actions}</div></div>`;
 }
 
-function findLocalFile(chatId, msgId, kind){
+function findEncFile(chatId, msgId){
+  // look up files_index for a matching entry
   const key=Object.keys(S.filesIndex).find(k=>{
     const f=S.filesIndex[k];
-    if(kind) return f.chat_id==chatId && f.label===kind;
     return f.chat_id==chatId && f.msg_id==msgId;
   });
   if(!key) return null;
-  return S.filesIndex[key].path; // e.g. data/files/12345_678.jpg
+  return S.filesIndex[key].enc_path; // path like data/files/xxx.enc
 }
-const findEncFile = findLocalFile; // backwards-compat alias
 
 function ikbHTML(m,chatId){
   if(!m.inline_keyboard?.length) return "";
@@ -1323,12 +1572,13 @@ function toggleDl(el,chatId,msgId,forceAdd){
 /* ════════════════════════════════════
    DECRYPT HELPERS
 ════════════════════════════════════ */
-async function decryptToObjectURL(filePath, mimeType){
-  // files are stored as plain bytes now (private repo) — just fetch directly
-  const fetchPath = filePath.startsWith("data/") ? "./"+filePath : filePath;
+async function decryptToObjectURL(encPath, mimeType){
+  // encPath is like "data/files/xxx.enc" — fetch it relative to repo root
+  const fetchPath = encPath.startsWith("data/") ? "./"+encPath : encPath;
   const r=await fetch(`${fetchPath}?_=${Date.now()}`);
   if(!r.ok) throw new Error(`HTTP ${r.status} fetching ${fetchPath}`);
-  const bytes=await r.arrayBuffer();
+  const raw=new Uint8Array(await r.arrayBuffer());
+  const bytes=await fernetDecryptBytes(uiKey,raw);
   const blob=new Blob([bytes],{type:mimeType||"application/octet-stream"});
   return URL.createObjectURL(blob);
 }
@@ -1368,15 +1618,19 @@ function guessMime(filename){
 function openDet(){ id("det").style.display="flex"; }
 function renderDet(c){
   const isBot=c.is_bot||c.kind==="bot";
-  const ini=c.name.split(" ").slice(0,2).map(w=>w[0]||"").join("").toUpperCase();
-  const avCls=isBot?"bot":c.kind==="group"?"group":c.kind==="channel"?"channel":"";
+  const isSaved=c.kind==="saved";
+  const ini=isSaved?"":c.name.split(" ").slice(0,2).map(w=>w[0]||"").join("").toUpperCase();
+  const avCls=isSaved?"saved":isBot?"bot":c.kind==="group"?"group":c.kind==="channel"?"channel":"";
+  const avInner=isSaved?`<span class="sym" style="font-size:26px">bookmark</span>`:ini;
   id("det-body").innerHTML=`
   <div class="det-av-wrap">
-    <div class="det-av ${avCls}">${ini}</div>
+    <div class="det-av ${avCls}" id="det-av-box">${avInner}</div>
     <div class="det-name">${esc(c.name)}${c.is_verified?` <span class="symf" style="color:#2563eb;font-size:14px;vertical-align:middle">verified</span>`:""}</div>
     ${c.username?`<div class="det-handle">@${c.username}</div>`:""}
     <div style="display:flex;gap:6px;flex-wrap:wrap;justify-content:center">
-      <span class="det-kind-badge">${isBot?"Bot":c.kind}</span>
+      <span class="det-kind-badge">${isSaved?"Saved Messages":isBot?"Bot":c.kind}</span>
+      ${c.pinned?`<span class="det-kind-badge"><span class="sym" style="font-size:11px;vertical-align:middle">push_pin</span> Pinned</span>`:""}
+      ${c.archived?`<span class="det-kind-badge"><span class="sym" style="font-size:11px;vertical-align:middle">archive</span> Archived</span>`:""}
       ${c.is_scam?`<span class="det-scam">⚠ Scam</span>`:""}
     </div>
   </div>
@@ -1384,11 +1638,19 @@ function renderDet(c){
   <div class="det-section">
     <div class="det-section-title">Details</div>
     <div class="det-row"><span class="det-lbl">ID</span><span class="det-val">${c.id}</span></div>
-    <div class="det-row"><span class="det-lbl">Type</span><span class="det-val">${isBot?"Bot":c.kind}</span></div>
+    <div class="det-row"><span class="det-lbl">Type</span><span class="det-val">${isSaved?"Saved Messages":isBot?"Bot":c.kind}</span></div>
     ${c.members_count!=null?`<div class="det-row"><span class="det-lbl">${c.kind==="channel"?"Subscribers":"Members"}</span><span class="det-val">${fmtNum(c.members_count)}</span></div>`:""}
     <div class="det-row"><span class="det-lbl">Unread</span><span class="det-val" style="color:var(--accent)">${c.unread_count}</span></div>
     <div class="det-row"><span class="det-lbl">Cached msgs</span><span class="det-val">${c.messages?.length||0}</span></div>
     <div class="det-row"><span class="det-lbl">Last sync</span><span class="det-val">${S.meta.last_sync?fmtTime(S.meta.last_sync):"–"}</span></div>
+  </div>
+  <div class="det-section">
+    <div class="det-section-title">Fetch settings</div>
+    <div class="det-numrow">
+      <span class="det-lbl">Messages to fetch per sync</span>
+      <input class="det-num-input" type="number" min="1" max="500" id="fetch-count-inp" value="${c.fetch_count||20}"/>
+    </div>
+    <button class="det-num-save" style="margin-top:6px;width:100%" onclick="saveFetchCount(${c.id})">Save</button>
   </div>
   <div class="det-section">
     <div class="det-section-title">Actions</div>
@@ -1398,7 +1660,17 @@ function renderDet(c){
       <button class="det-btn" onclick="addQ({type:'download_request',chat_id:${c.id},msg_id:null,kind:'all_profile_media'})"><span class="sym">photo_library</span>Download all profile photos</button>
     </div>
   </div>`;
+  if(c.avatar && S.filesIndex[c.avatar]){
+    decryptToObjectURL(S.filesIndex[c.avatar].enc_path, S.filesIndex[c.avatar].mime_type||"image/jpeg")
+      .then(url=>{ const b=id("det-av-box"); if(b) b.innerHTML=`<img src="${url}" alt=""/>`; }).catch(()=>{});
+  }
   id("det").style.display="flex";
+}
+function saveFetchCount(chatId){
+  const v=parseInt(id("fetch-count-inp").value,10);
+  if(!v||v<1){snack("Enter a number ≥ 1");return;}
+  addQ({type:"set_fetch_count",chat_id:chatId,count:Math.min(v,500)});
+  snack(`Queued: fetch ${Math.min(v,500)} messages for this chat`);
 }
 
 /* ════════════════════════════════════
@@ -1407,7 +1679,7 @@ function renderDet(c){
 function toggleFab(){
   S.fabOpen=!S.fabOpen;
   id("fab-panel").classList.toggle("on",S.fabOpen);
-  id("fab-ico").textContent=S.fabOpen?"close":(S.fabTab==="tracker"?"timeline":"pending_actions");
+  id("fab-ico").textContent=S.fabOpen?"close":(S.fabTab==="tracker"?"timeline":"sync");
   if(S.fabOpen) renderFab();
 }
 function setFabTab(t){
@@ -1428,7 +1700,7 @@ function renderFab(){
     body.innerHTML=cnt
       ? S.queue.map(a=>`<div class="qi"><span class="qi-tag">${esc(a.type)}</span><span class="qi-desc">${esc(qDesc(a))}</span><button class="qi-rm" onclick="rmQ(${a._id})"><span class="sym">close</span></button></div>`).join("")
       : `<div class="fab-empty"><span class="symf" style="font-size:32px;display:block;margin-bottom:8px;opacity:.3">pending_actions</span>Queue is empty</div>`;
-    foot.innerHTML=`<button class="disp-btn" onclick="dispatch()" ${cnt?"":"disabled"}><span class="sym">send</span>Dispatch ${cnt?cnt+" action"+(cnt>1?"s":""):""}</button>${cnt?`<button class="clr-btn" onclick="S.queue=[];renderFab()">Clear</button>`:""}`;
+    foot.innerHTML=`<button class="disp-btn" onclick="dispatch()"><span class="sym">sync</span>${cnt?`Send ${cnt} action${cnt>1?"s":""} & sync`:"Sync now"}</button>${cnt?`<button class="clr-btn" onclick="S.queue=[];renderFab()">Clear</button>`:""}`;
   }else{
     const hasOk=S.tracker.some(t=>t.type==="DISPATCH"&&t.status==="ok");
     const trackerHTML=S.tracker.length
@@ -1449,12 +1721,6 @@ function addQ(action){
   if(!S.fabOpen){S.fabOpen=true;id("fab-panel").classList.add("on");}
   setFabTab("queue");
 }
-function addQSilent(action){
-  // same as addQ but doesn't pop open the panel or show a snack — for auto mark-read
-  action._id=Date.now()+Math.random();
-  S.queue.push(action);
-  renderFab();
-}
 function rmQ(i){S.queue=S.queue.filter(a=>a._id!==i);renderFab();}
 function track(type,label,status,detail=""){
   if(type==="QUEUE") return;
@@ -1464,6 +1730,7 @@ function track(type,label,status,detail=""){
 }
 function qDesc(a){
   if(a.type==="send_message") return `→ ${a.chat_id}: "${trunc(a.text,28)}"`;
+  if(a.type==="start_bot") return `Start bot: ${a.target}${a.payload?" "+a.payload:""}`;
   if(a.type==="react") return `${a.emoji} on #${a.msg_id} in ${a.chat_id}`;
   if(a.type==="mark_read") return `Mark read: ${a.chat_id}`;
   if(a.type==="download_request") return a.kind==="all_profile_media"?`All profile photos: ${a.chat_id}`:a.kind==="profile_pic"?`Profile pic: ${a.chat_id}`:`File msg #${a.msg_id}`;
@@ -1471,11 +1738,17 @@ function qDesc(a){
   if(a.type==="forward") return `Forward #${a.msg_id} → ${a.to_chat_id}`;
   if(a.type==="delete_message") return `Delete #${a.msg_id}`;
   if(a.type==="edit_message") return `Edit #${a.msg_id}`;
+  if(a.type==="join_chat") return `Join: ${a.target}`;
+  if(a.type==="set_fetch_count") return `Fetch ${a.count} msgs for ${a.chat_id}`;
+  if(a.type==="set_ghost_mode") return `Ghost mode: ${a.enabled?"on":"off"}`;
   return JSON.stringify(a).slice(0,40);
 }
 
 async function dispatch(){
-  if(!S.queue.length) return;
+  if(!S.queue.length){
+    // merged sync+dispatch: an empty queue just means "sync now"
+    return triggerFetch();
+  }
 
   // guard: token must exist
   if(!CFG.ghToken){
@@ -1519,8 +1792,9 @@ async function dispatch(){
       throw new Error(`HTTP ${r.status}: ${body}`);
     }
     track("DISPATCH",`${actions.length} action(s) sent`,"ok","Workflow triggered successfully");
-    snack(`✓ Dispatched ${actions.length} action(s)`);
+    snack(`✓ Dispatched ${actions.length} action(s) — syncing in ~45s`);
     S.queue=[]; setFabTab("tracker");
+    setTimeout(()=>loadData().then(()=>{renderChats();if(S.activeId)openChat(S.activeId);snack("✓ Synced");}),45000);
   }catch(e){
     // network errors (CORS, offline, etc) show a helpful message
     let msg=e.message;
@@ -1583,7 +1857,7 @@ function showFiles(){
         </div>
         <div class="fi-actions">
           ${canPreview?`<button class="fi-btn" onclick="closeFiles();openLbFromIndex('${f.safe_name||f.label}')"><span class="sym">visibility</span>View</button>`:""}
-          <button class="fi-btn" onclick="downloadEnc('${f.path}','${esc(f.filename||f.safe_name||"file")}')"><span class="sym">download</span>Save</button>
+          <button class="fi-btn" onclick="downloadEnc('${f.enc_path}','${esc(f.filename||f.safe_name||"file")}')"><span class="sym">download</span>Save</button>
         </div>
       </div>`;
     }).join("");
@@ -1602,13 +1876,13 @@ async function openLbFromIndex(key){
   cont.innerHTML=`<div class="lb-loading"><div class="lb-spinner"></div><span>Decrypting…</span></div>`;
   foot.innerHTML="";
   try{
-    const url=await decryptToObjectURL(f.path,mime);
+    const url=await decryptToObjectURL(f.enc_path,mime);
     S._lbUrl=url;
     if(mime.startsWith("video")) cont.innerHTML=`<video controls autoplay style="max-width:90vw;max-height:82vh;border-radius:var(--r2)" src="${url}"></video>`;
     else if(mime.startsWith("image")) cont.innerHTML=`<img src="${url}" style="max-width:90vw;max-height:82vh;border-radius:var(--r2);object-fit:contain"/>`;
-    else if(mime.startsWith("audio")) { await playAudioEnc(f.path,f.filename||"audio",mime); closeLb(); return; }
+    else if(mime.startsWith("audio")) { await playAudioEnc(f.enc_path,f.filename||"audio",mime); closeLb(); return; }
     else cont.innerHTML=`<div style="color:var(--text2);font-size:13px;text-align:center"><span class="symf" style="font-size:48px;display:block;margin-bottom:12px;color:var(--accent)">description</span>${esc(f.filename)}</div>`;
-    foot.innerHTML=`<div class="lb-info">${esc(f.filename||"File")} ${f.size?`· ${fmtSize(f.size)}`:""}</div><button class="lb-dl-btn" onclick="downloadEnc('${f.path}','${esc(f.filename||"file")}')"><span class="sym">download</span>Save</button>`;
+    foot.innerHTML=`<div class="lb-info">${esc(f.filename||"File")} ${f.size?`· ${fmtSize(f.size)}`:""}</div><button class="lb-dl-btn" onclick="downloadEnc('${f.enc_path}','${esc(f.filename||"file")}')"><span class="sym">download</span>Save</button>`;
   }catch(e){cont.innerHTML=`<div style="color:var(--red);font-size:13px">Decrypt failed: ${esc(e.message)}</div>`;}
 }
 
@@ -1619,7 +1893,7 @@ async function triggerFetch(){
   if(!CFG.ghToken){snack("✗ No GitHub token — re-unlock the page");return;}
   if(!CFG.ghOwner||!CFG.ghRepo){snack("✗ Missing owner/repo in config.enc");return;}
   track("SYNC","Manual sync triggered","running","Triggering fetch_messages…");
-  const ico=id("sync-ico"); ico.style.animation="spin 1s linear infinite";
+  const ico=id("fab-ico"); if(ico) ico.style.animation="spin 1s linear infinite";
   try{
     const r=await fetch(`https://api.github.com/repos/${CFG.ghOwner}/${CFG.ghRepo}/actions/workflows/fetch_messages.yml/dispatches`,{
       method:"POST",
@@ -1645,22 +1919,55 @@ async function triggerFetch(){
     track("SYNC","Sync failed","error",msg);
     snack("✗ "+msg.slice(0,70));
   }
-  ico.style.animation="";
+  if(ico) ico.style.animation="";
   if(S.fabOpen&&S.fabTab==="tracker") renderFab();
 }
 
 /* ════════════════════════════════════
    UI UTILS
 ════════════════════════════════════ */
-function toggleNav(){id("nav").classList.toggle("open");}
-function toggleGhost(){
-  S.ghostMode=!S.ghostMode;
-  const btn=id("ghost-btn"), ico=id("ghost-ico");
-  ico.textContent=S.ghostMode?"visibility_off":"visibility";
-  btn.style.color=S.ghostMode?"var(--accent)":"";
-  btn.title=S.ghostMode?"Ghost mode ON — viewing won't mark chats as read":"Ghost mode OFF — viewing marks chats as read";
-  snack(S.ghostMode?"👻 Ghost mode ON":"Ghost mode OFF — auto mark-read enabled");
+function toggleMoreMenu(){ id("more-menu").classList.toggle("on"); }
+function closeMoreMenu(){ id("more-menu").classList.remove("on"); }
+document.addEventListener("click",e=>{ if(!e.target.closest("#more-dd")) closeMoreMenu(); });
+
+function setGhostMode(enabled){
+  S.meta.ghost_mode=enabled; // optimistic local update
+  addQ({type:"set_ghost_mode",enabled});
+  snack(enabled?"Ghost mode queued — dispatch to apply":"Ghost mode off — queued");
+  if(enabled) renderChats(); // hides unread badges immediately for chats already marked 0 locally isn't possible without server data, but re-render is harmless
 }
+
+function openCleanup(){ id("cleanup-modal").classList.add("on"); }
+function closeCleanup(){ id("cleanup-modal").classList.remove("on"); }
+async function submitCleanup(){
+  if(!CFG.ghToken){snack("✗ No GitHub token — re-unlock the page");return;}
+  if(!CFG.ghOwner||!CFG.ghRepo){snack("✗ Missing owner/repo in config.enc");return;}
+  const keep=id("cleanup-keep-pics").checked;
+  track("CLEANUP",`Cleanup triggered (keep pics: ${keep})`,"running");
+  closeCleanup();
+  try{
+    const r=await fetch(`https://api.github.com/repos/${CFG.ghOwner}/${CFG.ghRepo}/actions/workflows/cleanup_files.yml/dispatches`,{
+      method:"POST",
+      headers:{
+        "Authorization":`Bearer ${CFG.ghToken}`,
+        "Accept":"application/vnd.github+json",
+        "Content-Type":"application/json",
+        "X-GitHub-Api-Version":"2022-11-28",
+      },
+      body:JSON.stringify({ref:"main",inputs:{keep_profile_pics:String(keep)}}),
+    });
+    if(!r.ok){
+      const body=await r.text().catch(()=>"(no body)");
+      throw new Error(`HTTP ${r.status}: ${body}`);
+    }
+    track("CLEANUP","Cleanup triggered","ok",`keep_profile_pics=${keep}`);
+    snack("✓ Cleanup workflow triggered");
+  }catch(e){
+    track("CLEANUP","Cleanup failed","error",e.message);
+    snack("✗ "+e.message.slice(0,70));
+  }
+}
+function toggleNav(){id("nav").classList.toggle("open");}
 function scrollToMsg(mid){document.querySelector(`[data-mid="${mid}"]`)?.scrollIntoView({behavior:"smooth",block:"center"});}
 function autoGrow(el){el.style.height="auto";el.style.height=Math.min(el.scrollHeight,120)+"px";}
 function composeKey(e){if(e.key==="Enter"&&!e.shiftKey){e.preventDefault();queueMsg();}}
@@ -1704,9 +2011,24 @@ function fmtSize(b){if(!b)return"";if(b<1024)return b+"B";if(b<1048576)return(b/
 function mediaLabel(m){if(!m)return"";return m.type==="photo"?"Photo":m.type==="sticker"?`Sticker${m.emoji?" "+m.emoji:""}`:m.type==="document"?(m.filename||"File"):m.type==="webpage"?(m.title||"Link"):m.type==="poll"?"Poll":m.type==="location"?"Location":m.type==="contact"?"Contact":m.type;}
 function mimeIcon(mime){if(!mime)return"description";if(mime.startsWith("image"))return"image";if(mime.startsWith("video"))return"movie";if(mime.startsWith("audio")||mime==="application/ogg")return"audio_file";if(mime.includes("pdf"))return"picture_as_pdf";if(mime.includes("zip")||mime.includes("archive"))return"folder_zip";if(mime.includes("text"))return"text_snippet";return"description";}
 
-document.addEventListener("keydown",e=>{if(e.key==="Escape"){closeLb();closeFiles();closeCtx();closeJoin();}});
+document.addEventListener("keydown",e=>{if(e.key==="Escape"){closeLb();closeFiles();closeCtx();closeJoin();closeCleanup();closeMoreMenu();}});
 
-// (debug helper removed — no longer needed without encrypted config));
+async function testConfigEnc(){
+  const inf=id("linf"), err=id("lerr");
+  err.textContent=""; inf.textContent="Testing…";
+  try{
+    const r=await fetch("./data/config.enc?_="+Date.now());
+    const bytes=new Uint8Array(await r.arrayBuffer());
+    const b64preview=btoa(String.fromCharCode(...bytes.slice(0,16)));
+    inf.textContent=`HTTP ${r.status} · ${bytes.length} bytes · starts: ${b64preview}…`;
+    if(bytes[0]!==0x80) err.textContent="Warning: first byte is 0x"+bytes[0].toString(16)+", expected 0x80 (not a valid Fernet token)";
+    else err.textContent="";
+  }catch(e){
+    inf.textContent="";
+    err.textContent="Fetch failed: "+e.message;
+  }
+}
+document.addEventListener("click",e=>{if(!e.target.closest("#ctx-menu")&&!e.target.closest(".msg-menu-btn"))closeCtx();});
 
 /* CONTEXT MENU */
 let _ctx={chatId:null,msgId:null,text:""};
@@ -1742,14 +2064,57 @@ function ctxPin(){addQ({type:"pin_message",chat_id:_ctx.chatId,msg_id:_ctx.msgId
 function ctxDelete(){if(confirm("Delete this message for everyone?"))addQ({type:"delete_message",chat_id:_ctx.chatId,msg_id:_ctx.msgId,revoke:true});closeCtx();}
 function ctxReactMore(){const e=prompt("Enter emoji:");if(e)addQ({type:"react",chat_id:_ctx.chatId,msg_id:_ctx.msgId,emoji:e.trim()});closeCtx();}
 
-/* JOIN CHAT */
-function openJoin(){id("join-modal").classList.add("on");setTimeout(()=>id("join-inp").focus(),60);}
-function closeJoin(){id("join-modal").classList.remove("on");id("join-inp").value="";}
+/* JOIN / NEW CHAT */
+let joinMode="join";
+function openJoin(){
+  setJoinMode("join");
+  id("join-modal").classList.add("on");
+  setTimeout(()=>id("join-inp").focus(),60);
+}
+function closeJoin(){
+  id("join-modal").classList.remove("on");
+  id("join-inp").value=""; id("join-inp2").value="";
+}
+function setJoinMode(mode){
+  joinMode=mode;
+  ["jm-join","jm-bot","jm-msg"].forEach(i=>id(i).classList.remove("on"));
+  const sub=id("join-sub"), inp2=id("join-inp2"), btn=id("join-submit-btn"), inp=id("join-inp");
+  if(mode==="join"){
+    id("jm-join").classList.add("on");
+    sub.textContent="Enter a @username, invite link (t.me/+…), or numeric chat ID";
+    inp.placeholder="@username or https://t.me/+abc123…";
+    inp2.style.display="none"; btn.textContent="Join";
+  }else if(mode==="start_bot"){
+    id("jm-bot").classList.add("on");
+    sub.textContent="Enter the bot's @username — sends /start to begin a conversation with it";
+    inp.placeholder="@somebot";
+    inp2.style.display="block"; inp2.placeholder="Optional /start payload…";
+    btn.textContent="Start bot";
+  }else{
+    id("jm-msg").classList.add("on");
+    sub.textContent="Message someone you don't already have a chat with, by @username";
+    inp.placeholder="@username";
+    inp2.style.display="block"; inp2.placeholder="Message text…";
+    btn.textContent="Send";
+  }
+}
 function submitJoin(){
   const val=id("join-inp").value.trim();
   if(!val){snack("Enter a username or link");return;}
-  addQ({type:"join_chat",target:val});
-  snack("Queued: join "+val);
+  if(joinMode==="join"){
+    addQ({type:"join_chat",target:val});
+    snack("Queued: join "+val);
+  }else if(joinMode==="start_bot"){
+    const payload=id("join-inp2").value.trim();
+    addQ({type:"start_bot",target:val,payload});
+    snack("Queued: start bot "+val);
+  }else{
+    const text=id("join-inp2").value.trim();
+    if(!text){snack("Enter a message to send");return;}
+    const target=val.replace(/^@/,"").replace("https://t.me/","");
+    addQ({type:"send_message",chat_id:target,text});
+    snack(`Queued: message to ${val} — dispatch & sync to see the chat appear`);
+  }
   closeJoin();
 }
 </script>
